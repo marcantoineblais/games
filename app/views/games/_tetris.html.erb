@@ -1,8 +1,8 @@
-<div class="tetris" data-controller="hello">
+<div class="tetris" data-controller="tetris" data-action="keydown@window->tetris#move">
   <% 22.times do %>
     <div class="d-flex justify-content-center">
       <% 12.times do %>
-        <div class="grid"></div>
+        <div class="grid empty" data-tetris-target="grid"></div>
       <% end %>
     </div>
   <% end %>
