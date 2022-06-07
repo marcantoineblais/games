@@ -1,9 +1,13 @@
 <div class="tetris" data-controller="tetris" data-action="keydown@window->tetris#move">
+  <% y = 0 %>
   <% 22.times do %>
     <div class="d-flex justify-content-center">
+      <% x = 0 %>
       <% 12.times do %>
-        <div class="grid empty" data-tetris-target="grid"></div>
+        <div id="<%= x %>,<%= y %>" class="grid empty" data-tetris-target="grid"></div>
+        <% x += 1 %>
       <% end %>
     </div>
+    <% y += 1 %>
   <% end %>
 </div>
