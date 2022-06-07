@@ -1,4 +1,4 @@
-<div class="tetris" data-controller="tetris" data-action="keydown@window->tetris#move">
+<div class="tetris" data-controller="tetris" data-action="keydown@window->tetris#moveInput">
   <% y = 0 %>
   <% 22.times do %>
     <div class="d-flex justify-content-center">
@@ -10,4 +10,6 @@
     </div>
     <% y += 1 %>
   <% end %>
+
+  <button data-tetris-target="startBtn" data-action="click->tetris#start">START</button>
 </div>
