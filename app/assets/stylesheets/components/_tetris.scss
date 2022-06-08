@@ -34,6 +34,7 @@ h1 {
     font-size: 48px;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
   }
 
   .grid {
@@ -46,38 +47,38 @@ h1 {
   }
 
   .green {
-    background-color: green;
-    border: solid darkgreen 2px;
+    background-color: rgb(0, 189, 0);
+    border: solid rgb(0, 156, 0) 2px;
   }
 
   .orange {
-    background-color: orange;
-    border: solid darkorange 2px;
+    background-color: rgb(255, 145, 0);
+    border: solid rgb(194, 132, 0) 2px;
   }
 
   .purple {
-    background-color: purple;
-    border: solid darkmagenta 2px;
+    background-color: rgb(212, 0, 255);
+    border: solid rgb(172, 0, 214) 2px;
   }
 
   .blue {
-    background-color: blue;
-    border: solid darkblue 2px;
+    background-color: rgb(0, 0, 255);
+    border: solid rgb(0, 0, 211) 2px;
   }
 
   .red {
-    background-color: red;
-    border: solid darkred 2px;
+    background-color: rgb(255, 0, 0);
+    border: solid rgb(207, 0, 0) 2px;
   }
 
-  .light-blue {
-    background-color: lightblue;
-    border: solid blue 2px;
+  .pink {
+    background-color: rgb(255, 0, 106);
+    border: solid rgb(224, 0, 75) 2px;
   }
 
   .yellow {
-    background-color: yellow;
-    border: solid darkgoldenrod 2px;
+    background-color: rgb(255, 217, 0);
+    border: solid rgb(212, 168, 0) 2px;
   }
 
 }

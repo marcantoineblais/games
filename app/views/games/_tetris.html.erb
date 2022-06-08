@@ -1,4 +1,5 @@
 <div class="tetris" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#removeInput">
+  <h3 data-tetris-target="level">Level 1</h3>
   <% y = 0 %>
   <% 22.times do %>
     <div class="d-flex justify-content-center" data-tetris-target="row">
@@ -11,10 +12,14 @@
     <% y += 1 %>
   <% end %>
   <button class="btn btn-primary m-3" data-tetris-target="startBtn" data-action="click->tetris#start">START</button>
-  <div id="game-over"><H2>GAME OVER</H2></div>
+
+  <div id="game-over" data-tetris-target="gameOver">
+    <H2>GAME OVER</H2>
+    <button class="btn btn-primary m-3" data-tetris-target="replayBtn" data-action="click->tetris#replay">PLAY AGAIN?</button>
+  </div>
 
   <div id="score">
     <h3>SCORE</h3>
-    <p>0</p>
+    <h3 data-tetris-target="score" class="text-end">0</h3>
   </div>
 </div>

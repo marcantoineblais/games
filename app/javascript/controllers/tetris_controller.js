@@ -2,29 +2,43 @@ import { Controller } from 'stimulus';
 
 export default class extends Controller {
 
-  static targets = ['grid', 'row', 'startBtn']
+  static targets = ['grid', 'row', 'startBtn', 'replayBtn', 'gameOver', 'score', 'level']
 
   connect() {
     const game = this.element
     this.cols = 11
     this.rows = 21
     this.speed = 1000
+    this.destroyedLines = 0
     this.inputs = []
+    this.score = 0
+    this.level = 1
   }
 
   start(e) {
-    e.currentTarget.outerHTML = ""
-    this.newPiece()
+    e.currentTarget.style.display = "none"
     this.keysInput = setInterval(() => {this.move()}, 80)
+    this.newPiece()
+  }
+
+  replay(e) {
+    this.gameOverTarget.style.display = "none"
+
+    this.gridTargets.forEach((space) => {
+      space.className = 'grid'
+    })
+    this.speed = 1000
+    this.keysInput = setInterval(() => {this.move()}, 80)
+    this.newPiece()
   }
 
   newPiece() {
 
     const straigtPiece = [
-      {color: 'light-blue', radiusX: -2, radiusY: -2, x: 6, y: 3},
-      {color: 'light-blue', radiusX: -1, radiusY: -1, x: 6, y: 2},
-      {color: 'light-blue', radiusX: 0, radiusY: 0, x: 6, y: 1},
-      {color: 'light-blue', radiusX: 1, radiusY: 1, x: 6, y: 0}
+      {color: 'pink', radiusX: -2, radiusY: -2, x: 6, y: 3},
+      {color: 'pink', radiusX: -1, radiusY: -1, x: 6, y: 2},
+      {color: 'pink', radiusX: 0, radiusY: 0, x: 6, y: 1},
+      {color: 'pink', radiusX: 1, radiusY: 1, x: 6, y: 0}
     ]
 
     const lPiece = [
@@ -64,16 +78,21 @@ export default class extends Controller {
 
     const squarePiece = [
       {color: 'yellow', radiusX: -1, radiusY: 1, x: 7, y: 1},
-      {color: 'yellow', radiusX: 0, radiusY: -2, x: 6, y: 1},
-      {color: 'yellow', radiusX: 0, radiusY: 0, x: 7, y: 0},
-      {color: 'yellow', radiusX: 1, radiusY: -1, x: 6, y: 0}
+      {color: 'yellow', radiusX: 0, radiusY: 0, x: 6, y: 1},
+      {color: 'yellow', radiusX: 0, radiusY: 2, x: 7, y: 0},
+      {color: 'yellow', radiusX: 1, radiusY: 1, x: 6, y: 0}
     ]
 
     const pieces = [straigtPiece, lPiece, reversedLPiece, zPiece, reversedZPiece, tPiece, squarePiece]
 
     this.piece = {blocks: pieces[Math.floor((Math.random() * 7))], falling: true}
     this.#drawPiece()
-    this.fallTimer = setInterval(() => {this.#moveDown()}, this.speed)
+    this.fallTimer = setInterval(() => {
+      if (!this.inputs.includes('downarrow') || !this.inputs.includes('s')) {
+        this.#moveDown()
+      }
+    }, this.speed)
+    console.log(this.speed);
   }
 
   moveInput(e) {
@@ -108,8 +127,9 @@ export default class extends Controller {
     this.piece.blocks.forEach((block) => {
       this.gridTargets.forEach((space) => {
         if (space.id === `${block.x},${block.y}` && space.classList.value.includes('taken')) {
-          document.getElementById('game-over').style.display = 'flex'
-          return
+          clearInterval(this.keysInput)
+          this.gameOverTarget.style.display = 'flex'
+          this.replayBtnTarget.style.display = "block"
         }
 
         if (space.id === `${block.x},${block.y}`) {
@@ -298,6 +318,8 @@ export default class extends Controller {
   }
 
   #destroyFullLine() {
+    let fullLines = 0
+
     this.rowTargets.forEach((row) => {
       const spacesArray = Array.from(row.children)
       const fullLine = spacesArray.every((space) => {
@@ -305,6 +327,8 @@ export default class extends Controller {
       })
 
       if (fullLine) {
+        this.destroyedLines += 1
+        fullLines += 1
         const rowYPosition = parseInt(spacesArray[0].id.split(',')[1])
         spacesArray.forEach((space) => {
           space.className = "grid empty"
@@ -323,5 +347,27 @@ export default class extends Controller {
         })
       }
     })
+
+    this.#score(fullLines)
+  }
+
+  #score(fullLines) {
+    if (fullLines == 1) {
+      this.score += 40
+    } else if (fullLines == 2) {
+      this.score += 100
+    } else if (fullLines == 3) {
+      this.score += 300
+    } else if (fullLines == 4) {
+      this.score += 1200
+    }
+
+    if (fullLines > 0) {
+      this.scoreTarget.innerText = this.score
+      if (this.speed > 300) {
+        this.speed = 1000 - (50 * Math.floor(this.destroyedLines / 10))
+      }
+      this.levelTarget.innerText = `Level ${1 + Math.floor(this.destroyedLines / 10)}`
+    }
   }
 }
