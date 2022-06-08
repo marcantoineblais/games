@@ -2,26 +2,29 @@ import { Controller } from 'stimulus';
 
 export default class extends Controller {
 
-  static targets = ['grid', 'startBtn']
+  static targets = ['grid', 'row', 'startBtn']
 
   connect() {
-    console.log("tetris game")
+    const game = this.element
     this.cols = 11
     this.rows = 21
-    this.end = this.rows * this.cols
+    this.speed = 1000
+    this.inputs = []
   }
 
   start(e) {
     e.currentTarget.outerHTML = ""
     this.newPiece()
+    this.keysInput = setInterval(() => {this.move()}, 80)
   }
 
   newPiece() {
+
     const straigtPiece = [
-      {color: 'grey', radiusX: -2, radiusY: -2, x: 6, y: 3},
-      {color: 'grey', radiusX: -1, radiusY: -1, x: 6, y: 2},
-      {color: 'grey', radiusX: 0, radiusY: 0, x: 6, y: 1},
-      {color: 'grey', radiusX: 1, radiusY: 1, x: 6, y: 0}
+      {color: 'light-blue', radiusX: -2, radiusY: -2, x: 6, y: 3},
+      {color: 'light-blue', radiusX: -1, radiusY: -1, x: 6, y: 2},
+      {color: 'light-blue', radiusX: 0, radiusY: 0, x: 6, y: 1},
+      {color: 'light-blue', radiusX: 1, radiusY: 1, x: 6, y: 0}
     ]
 
     const lPiece = [
@@ -31,35 +34,84 @@ export default class extends Controller {
       {color: 'orange', radiusX: 2, radiusY: 2, x: 6, y: 0}
     ]
 
-    this.piece = {blocks: lPiece, falling: true}
+    const reversedLPiece = [
+      {color: 'purple', radiusX: -1, radiusY: 1, x: 6, y: 2},
+      {color: 'purple', radiusX: 0, radiusY: 0, x: 5, y: 2},
+      {color: 'purple', radiusX: 1, radiusY: 1, x: 5, y: 1},
+      {color: 'purple', radiusX: 2, radiusY: 2, x: 5, y: 0}
+    ]
 
+    const zPiece = [
+      {color: 'blue', radiusX: 1, radiusY: -1, x: 4, y: 1},
+      {color: 'blue', radiusX: 0, radiusY: 0, x: 5, y: 1},
+      {color: 'blue', radiusX: 1, radiusY: 1, x: 5, y: 0},
+      {color: 'blue', radiusX: 0, radiusY: 2, x: 6, y: 0}
+    ]
+
+    const reversedZPiece = [
+      {color: 'red', radiusX: -1, radiusY: 1, x: 7, y: 1},
+      {color: 'red', radiusX: 0, radiusY: 0, x: 6, y: 1},
+      {color: 'red', radiusX: 1, radiusY: 1, x: 6, y: 0},
+      {color: 'red', radiusX: 2, radiusY: 0, x: 5, y: 0}
+    ]
+
+    const tPiece = [
+      {color: 'green', radiusX: -1, radiusY: -1, x: 6, y: 2},
+      {color: 'green', radiusX: -1, radiusY: 1, x: 7, y: 1},
+      {color: 'green', radiusX: 0, radiusY: 0, x: 6, y: 1},
+      {color: 'green', radiusX: 1, radiusY: 1, x: 6, y: 0}
+    ]
+
+    const squarePiece = [
+      {color: 'yellow', radiusX: -1, radiusY: 1, x: 7, y: 1},
+      {color: 'yellow', radiusX: 0, radiusY: -2, x: 6, y: 1},
+      {color: 'yellow', radiusX: 0, radiusY: 0, x: 7, y: 0},
+      {color: 'yellow', radiusX: 1, radiusY: -1, x: 6, y: 0}
+    ]
+
+    const pieces = [straigtPiece, lPiece, reversedLPiece, zPiece, reversedZPiece, tPiece, squarePiece]
+
+    this.piece = {blocks: pieces[Math.floor((Math.random() * 7))], falling: true}
     this.#drawPiece()
-    this.move = setInterval(() => {
-      this.#moveDown()
-    }, 1000)
+    this.fallTimer = setInterval(() => {this.#moveDown()}, this.speed)
   }
 
   moveInput(e) {
-    if (e.key === 'ArrowLeft' || e.key === 'a') {
+    if (e && !this.inputs.includes(e.key.toLowerCase())) {
+      this.inputs.push(e.key.toLowerCase())
+    }
+  }
+
+  removeInput(e) {
+    this.inputs = this.inputs.filter(key => key !== e.key.toLowerCase())
+
+    if (e.key == ' ') {
+      this.#rotate()
+    }
+  }
+
+  move() {
+    if (this.inputs.includes('arrowleft') || this.inputs.includes('a')) {
       this.#moveLeft()
     }
 
-    if (e.key === 'ArrowRight' || e.key === 'd') {
+    if (this.inputs.includes('arrowright') || this.inputs.includes('d')) {
       this.#moveRight()
     }
 
-    if (e.key === 'ArrowDown' || e.key === 's') {
+    if (this.inputs.includes('arrowdown') || this.inputs.includes('s')) {
       this.#moveDown()
-    }
-
-    if ((e.key === ' ' || e.key === 'e')) {
-      this.#rotate()
     }
   }
 
   #drawPiece() {
     this.piece.blocks.forEach((block) => {
       this.gridTargets.forEach((space) => {
+        if (space.id === `${block.x},${block.y}` && space.classList.value.includes('taken')) {
+          document.getElementById('game-over').style.display = 'flex'
+          return
+        }
+
         if (space.id === `${block.x},${block.y}`) {
           space.classList.remove("empty")
           space.classList.add(`${block.color}`)
@@ -70,6 +122,9 @@ export default class extends Controller {
   }
 
   #stopFalling() {
+    clearInterval(this.fallTimer)
+    this.piece.falling = false
+
     this.piece.blocks.forEach((block) => {
       this.gridTargets.forEach((space) => {
         if (space.id === `${block.x},${block.y}`) {
@@ -77,8 +132,10 @@ export default class extends Controller {
           space.classList.add("taken")
         }
       })
-      this.piece.falling = false
     })
+
+    this.#destroyFullLine()
+    this.newPiece()
   }
 
   #moveLeft() {
@@ -105,7 +162,7 @@ export default class extends Controller {
   #moveRight() {
     const canMove = this.piece.blocks.every((block) => {
       return block.x < this.cols &&
-      !document.getElementById(`${block.x + 1},${block.y}`).classList.value.includes("taken")
+      !document.getElementById(`${block.x + 1},${block.y}`).classList.value.includes("taken") &&
       this.piece.falling
     })
 
@@ -142,9 +199,7 @@ export default class extends Controller {
       })
       this.#drawPiece()
     } else {
-      clearInterval(this.move)
       this.#stopFalling()
-      this.newPiece()
     }
   }
 
@@ -220,15 +275,52 @@ export default class extends Controller {
     this.piece.blocks.forEach((block) => {
       block.x += block.radiusX
       block.y += block.radiusY
+      let buffer
 
-      if (block.radiusX < 0 && block.radiusY < 0) {
-        block.radiusX = -block.radiusX
-      } else if (block.radiusX > 0 && block.radiusY < 0) {
-        block.radiusY = -block.radiusY
-      } else if (block.radiusX > 0 && block.radiusY > 0) {
-        block.radiusX = -block.radiusX
-      } else if (block.radiusX < 0 && block.radiusY > 0) {
-        block.radiusY = -block.radiusY
+      if (block.radiusX <= 0 && block.radiusY < 0) {
+        buffer = block.radiusX
+        block.radiusX = -block.radiusY
+        block.radiusY = buffer
+      } else if (block.radiusX >= 0 && block.radiusY <= 0) {
+        buffer = block.radiusX
+        block.radiusX = -block.radiusY
+        block.radiusY = buffer
+      } else if (block.radiusX >= 0 && block.radiusY >= 0) {
+        buffer = block.radiusX
+        block.radiusX = -block.radiusY
+        block.radiusY = buffer
+      } else if (block.radiusX < 0 && block.radiusY >= 0) {
+        buffer = block.radiusX
+        block.radiusX = -block.radiusY
+        block.radiusY = buffer
+      }
+    })
+  }
+
+  #destroyFullLine() {
+    this.rowTargets.forEach((row) => {
+      const spacesArray = Array.from(row.children)
+      const fullLine = spacesArray.every((space) => {
+        return space.classList.value.includes("taken")
+      })
+
+      if (fullLine) {
+        const rowYPosition = parseInt(spacesArray[0].id.split(',')[1])
+        spacesArray.forEach((space) => {
+          space.className = "grid empty"
+        })
+
+        this.gridTargets.reverse().forEach((space) => {
+          const coordinates = space.id.split(',')
+          const x = parseInt(coordinates[0])
+          const y = parseInt(coordinates[1])
+
+          if (y < rowYPosition) {
+            const block = space.className
+            space.className = 'grid empty'
+            document.getElementById(`${x},${y + 1}`).className = block
+          }
+        })
       }
     })
   }

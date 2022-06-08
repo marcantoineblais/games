@@ -1,15 +1,22 @@
-<div class="tetris" data-controller="tetris" data-action="keydown@window->tetris#moveInput">
-  <% y = 0 %>
-  <% 22.times do %>
-    <div class="d-flex justify-content-center">
-      <% x = 0 %>
-      <% 12.times do %>
-        <div id="<%= x %>,<%= y %>" class="grid empty" data-tetris-target="grid"></div>
-        <% x += 1 %>
-      <% end %>
-    </div>
-    <% y += 1 %>
-  <% end %>
+<div class="tetris d-flex justify-content-between" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#removeInput">
+  <div>
+    <% y = 0 %>
+    <% 22.times do %>
+      <div class="d-flex justify-content-center" data-tetris-target="row">
+        <% x = 0 %>
+        <% 12.times do %>
+          <div id="<%= x %>,<%= y %>" class="grid empty" data-tetris-target="grid"></div>
+          <% x += 1 %>
+        <% end %>
+      </div>
+      <% y += 1 %>
+    <% end %>
+  </div>
+  <div>
+    <h3>SCORE</h3>
+    <p>0</p>
+  </div>
+  <div id="game-over"><H2>GAME OVER</H2></div>
 
   <button data-tetris-target="startBtn" data-action="click->tetris#start">START</button>
 </div>
