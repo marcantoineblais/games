@@ -12,12 +12,13 @@ export default class extends Controller {
     this.destroyedLines = 0
     this.inputs = []
     this.score = 0
-    this.level = 1
+    this.frame = 16.6
+    this.game = true
   }
 
   start(e) {
     e.currentTarget.style.display = "none"
-    this.keysInput = setInterval(() => {this.move()}, 80)
+    this.startInputBuffer()
     this.newPiece()
   }
 
@@ -27,8 +28,14 @@ export default class extends Controller {
     this.gridTargets.forEach((space) => {
       space.className = 'grid'
     })
+
     this.speed = 1000
-    this.keysInput = setInterval(() => {this.move()}, 80)
+    this.score = 0
+    this.destroyedLines = 0
+    this.game = true
+
+    this.#drawLevel()
+    this.#drawScore()
     this.newPiece()
   }
 
@@ -86,13 +93,25 @@ export default class extends Controller {
     const pieces = [straigtPiece, lPiece, reversedLPiece, zPiece, reversedZPiece, tPiece, squarePiece]
 
     this.piece = {blocks: pieces[Math.floor((Math.random() * 7))], falling: true}
+    this.startFallTimer()
     this.#drawPiece()
-    this.fallTimer = setInterval(() => {
-      if (!this.inputs.includes('downarrow') || !this.inputs.includes('s')) {
-        this.#moveDown()
-      }
-    }, this.speed)
-    console.log(this.speed);
+  }
+
+  startInputBuffer() {
+    this.keysInput = setInterval(() => {this.move()}, this.frame)
+  }
+
+  stopInputBuffer() {
+    clearInterval(this.keysInput)
+  }
+
+  startFallTimer() {
+    this.stopFallTimer()
+    this.fallTimer = setInterval(() => {this.#moveDown()}, this.speed)
+  }
+
+  stopFallTimer() {
+    clearInterval(this.fallTimer)
   }
 
   moveInput(e) {
@@ -110,6 +129,8 @@ export default class extends Controller {
   }
 
   move() {
+    this.stopInputBuffer()
+
     if (this.inputs.includes('arrowleft') || this.inputs.includes('a')) {
       this.#moveLeft()
     }
@@ -119,15 +140,25 @@ export default class extends Controller {
     }
 
     if (this.inputs.includes('arrowdown') || this.inputs.includes('s')) {
+      this.stopFallTimer()
       this.#moveDown()
+      this.startFallTimer()
     }
+
+    this.buffer().then(() => this.startInputBuffer())
+  }
+
+  buffer() {
+    return new Promise(resolve => setTimeout(resolve, this.frame * 2));
   }
 
   #drawPiece() {
     this.piece.blocks.forEach((block) => {
       this.gridTargets.forEach((space) => {
         if (space.id === `${block.x},${block.y}` && space.classList.value.includes('taken')) {
-          clearInterval(this.keysInput)
+          this.game = false
+          this.stopFallTimer()
+          this.stopInputBuffer()
           this.gameOverTarget.style.display = 'flex'
           this.replayBtnTarget.style.display = "block"
         }
@@ -142,7 +173,7 @@ export default class extends Controller {
   }
 
   #stopFalling() {
-    clearInterval(this.fallTimer)
+    this.stopFallTimer()
     this.piece.falling = false
 
     this.piece.blocks.forEach((block) => {
@@ -155,7 +186,9 @@ export default class extends Controller {
     })
 
     this.#destroyFullLine()
-    this.newPiece()
+    if (this.game) {
+      this.newPiece()
+    }
   }
 
   #moveLeft() {
@@ -363,11 +396,19 @@ export default class extends Controller {
     }
 
     if (fullLines > 0) {
-      this.scoreTarget.innerText = this.score
+      this.#drawScore()
       if (this.speed > 300) {
         this.speed = 1000 - (50 * Math.floor(this.destroyedLines / 10))
       }
-      this.levelTarget.innerText = `Level ${1 + Math.floor(this.destroyedLines / 10)}`
+      this.#drawLevel()
     }
+  }
+
+  #drawLevel() {
+    this.levelTarget.innerText = `Level ${1 + Math.floor(this.destroyedLines / 10)}`
+  }
+
+  #drawScore() {
+    this.scoreTarget.innerText = this.score
   }
 }
