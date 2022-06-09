@@ -1,20 +1,14 @@
-button {
+a {
+  text-align: center;
   padding: 0.5em 1em;
   font-size: 24px;
   border-radius: 15px!important;
   background: linear-gradient(90deg, #222, #444);
-  color: #eee;
+  color: #eee!important;
+  text-decoration: none!important;
 
   &:hover {
-    opacity: 0.9
-  }
-
-  a {
-    text-decoration: none;
     color: #eee;
-
-    &:hover {
-      color: #eee;
-    }
+    opacity: 0.9
   }
 }
