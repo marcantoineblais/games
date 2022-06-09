@@ -11,18 +11,19 @@
     </div>
     <% y += 1 %>
   <% end %>
-  <button class="btn btn-primary m-3" data-tetris-target="startBtn" data-action="click->tetris#start">START</button>
+  <button class="m-3" data-tetris-target="startBtn" data-action="click->tetris#start">START</button>
 
   <div id="game-over" data-tetris-target="gameOver">
     <H2>GAME OVER</H2>
-    <button class="btn btn-primary m-3" data-tetris-target="replayBtn" data-action="click->tetris#replay">PLAY AGAIN?</button>
+    <button class="m-3" data-tetris-target="replayBtn" data-action="click->tetris#replay">PLAY AGAIN?</button>
   </div>
 
   <div id="score">
-    <h3 class="text-end pt-5 pe-3">SCORE</h3>
-    <h3 data-tetris-target="score" class="text-end pe-3">0</h3>
-
-    <div class="next-piece mt-5 me-3">
+    <div class="scoreboard">
+      <h3 class="text-end pe-3">Score</h3>
+      <h3 data-tetris-target="score" class="text-end pe-3">0</h3>
+    </div>
+    <div class="next-piece mt-3 me-3">
       <% y = -1 %>
       <% 5.times do %>
         <div class="d-flex justify-content-center">

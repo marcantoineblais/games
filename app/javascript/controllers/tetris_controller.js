@@ -156,7 +156,7 @@ export default class extends Controller {
   }
 
   buffer() {
-    return new Promise(resolve => setTimeout(resolve, this.frame * 2));
+    return new Promise(resolve => setTimeout(resolve, this.frame * 3));
   }
 
   #drawPiece() {

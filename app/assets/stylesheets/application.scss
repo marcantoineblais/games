@@ -16,3 +16,13 @@
  */
 
  @import 'components/index';
+
+
+
+ body {
+   min-height: 100vh;
+   background: linear-gradient(230deg,#00000033, #33333333), image-url('background.webp');
+   background-position: center;
+   background-repeat: no-repeat;
+   background-size: cover;
+ }
