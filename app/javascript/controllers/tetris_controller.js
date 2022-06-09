@@ -147,15 +147,15 @@ export default class extends Controller {
     }
 
     this.nextPiece = {blocks: pieces[Math.floor((Math.random() * pieces.length))], falling: true}
-    while (this.nextPiece == this.piece) {
+
+    while (this.nextPiece.blocks[0].color == this.piece.blocks[0].color) {
       this.nextPiece.blocks = pieces[Math.floor((Math.random() * pieces.length))]
     }
 
-    this.buffer(60).then(() => {
-      this.startFallTimer()
-      this.#drawPiece()
-      this.#drawNextPiece()
-    })
+
+    this.startFallTimer()
+    this.#drawPiece()
+    this.#drawNextPiece()
   }
 
   startInputBuffer() {
@@ -213,6 +213,10 @@ export default class extends Controller {
     return new Promise(resolve => setTimeout(resolve, this.frame * num));
   }
 
+  #waitForIt() {
+    return new Promise((resolve) => resolve())
+  }
+
   mute(e) {
     this.musicTarget.volume = 0
     this.loseAudioTarget.volume = 0
@@ -268,22 +272,30 @@ export default class extends Controller {
 
 
   #stopFalling() {
-    this.stopFallTimer()
-    this.piece.falling = false
 
-    this.piece.blocks.forEach((block) => {
-      this.gridTargets.forEach((space) => {
-        if (space.id === `${block.x},${block.y}`) {
-          space.classList.remove("active")
-          space.classList.add("taken")
-        }
+    if (!this.newPieceCue) {
+      this.newPieceCue = true
+      this.stopFallTimer()
+      this.piece.falling = false
+
+      this.piece.blocks.forEach((block) => {
+        this.gridTargets.forEach((space) => {
+          if (space.id === `${block.x},${block.y}`) {
+            space.classList.remove("active")
+            space.classList.add("taken")
+          }
+        })
       })
-    })
 
-    this.#destroyFullLine()
-    if (this.game) {
-      this.newPiece()
-      this.disableDown = false
+      this.#destroyFullLine().then(() => {
+        this.buffer(30).then(() => {
+          if (this.game) {
+            this.newPiece()
+            this.disableDown = false
+            this.newPieceCue = false
+          }
+        })
+      })
     }
   }
 
@@ -366,7 +378,7 @@ export default class extends Controller {
         this.disableDown = false
       })
     }
-    }
+  }
 
   #rotate() {
 
@@ -493,17 +505,18 @@ export default class extends Controller {
             const x = parseInt(coordinates[0])
             const y = parseInt(coordinates[1])
 
-            if (y < rowYPosition) {
+            if (y < rowYPosition && !space.classList.value.includes('active')) {
               const block = space.className
               space.className = 'grid empty'
               document.getElementById(`${x},${y + 1}`).className = block
             }
           })
+
         })
+        this.#score(fullLines)
       }
     })
-
-    this.#score(fullLines)
+    return this.#waitForIt()
   }
 
   #score(fullLines) {
