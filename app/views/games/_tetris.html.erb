@@ -19,8 +19,6 @@
     </p>
   </div>
 
-  <audio data-tetris-target="music" src="<%= audio_path 'tetris.m4a'%>" type="audio/m4a" loop></audio>
-  <audio data-tetris-target="loseAudio" src="<%= audio_path 'lose.m4a'%>" type="audio/m4a"></audio>
   <button id="start" data-tetris-target="startBtn" data-action="click->tetris#start">START</button>
 
   <div id="game-over" data-tetris-target="gameOver">
@@ -51,4 +49,8 @@
       <% end %>
     </div>
   </div>
+
+  <audio data-tetris-target="music" src="<%= audio_path 'tetris.weba'%>" type="audio/weba" loop></audio>
+  <audio data-tetris-target="loseAudio" src="<%= audio_path 'lose.m4a'%>" type="audio/m4a"></audio>
+  <audio data-tetris-target="lineClearAudio" src="<%= audio_path 'lineclear.weba'%>" type="audio/weba"></audio>
 </div>

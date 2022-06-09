@@ -13,6 +13,7 @@ export default class extends Controller {
     'level',
     'music',
     'loseAudio',
+    'lineClearAudio',
     'muteBtn',
     'unmuteBtn'
   ]
@@ -29,6 +30,7 @@ export default class extends Controller {
     this.game = true
     this.musicTarget.volume = 0.35
     this.loseAudioTarget.volume = 0.35
+    this.lineClearAudioTarget.volume = 0.75
   }
 
   start(e) {
@@ -102,13 +104,41 @@ export default class extends Controller {
     ]
 
     const squarePiece = [
-      {color: 'yellow', radiusX: -1, radiusY: 1, x: 7, y: 1},
+      {color: 'yellow', radiusX: 0, radiusY: 0, x: 7, y: 1},
       {color: 'yellow', radiusX: 0, radiusY: 0, x: 6, y: 1},
-      {color: 'yellow', radiusX: 0, radiusY: 2, x: 7, y: 0},
-      {color: 'yellow', radiusX: 1, radiusY: 1, x: 6, y: 0}
+      {color: 'yellow', radiusX: 0, radiusY: 0, x: 7, y: 0},
+      {color: 'yellow', radiusX: 0, radiusY: 0, x: 6, y: 0}
     ]
 
-    const pieces = [straigtPiece, lPiece, reversedLPiece, zPiece, reversedZPiece, tPiece, squarePiece]
+    const singlePiece = [
+      {color: 'cyan', radiusX: 0, radiusY: 0, x: 6, y: 1}
+    ]
+
+    const angledPiece = [
+      {color: 'magenta', radiusX: -1, radiusY: 1, x: 7, y: 1},
+      {color: 'magenta', radiusX: 0, radiusY: 0, x: 6, y: 1},
+      {color: 'magenta', radiusX: 1, radiusY: 1, x: 6, y: 0}
+    ]
+
+    const reversedAngledPiece = [
+      {color: 'peach', radiusX: 1, radiusY: -1, x: 5, y: 1},
+      {color: 'peach', radiusX: 0, radiusY: 0, x: 6, y: 1},
+      {color: 'peach', radiusX: 1, radiusY: 1, x: 6, y: 0}
+    ]
+
+
+    const pieces = [
+      straigtPiece,
+      lPiece,
+      reversedLPiece,
+      zPiece,
+      reversedZPiece,
+      tPiece,
+      squarePiece,
+      singlePiece,
+      angledPiece,
+      reversedAngledPiece,
+    ]
 
     if (this.nextPiece) {
       this.piece = this.nextPiece
@@ -116,10 +146,16 @@ export default class extends Controller {
       this.piece = {blocks: pieces[Math.floor((Math.random() * 7))], falling: true}
     }
 
-    this.nextPiece = {blocks: pieces[Math.floor((Math.random() * 7))], falling: true}
-    this.startFallTimer()
-    this.#drawPiece()
-    this.#drawNextPiece()
+    this.nextPiece = {blocks: pieces[Math.floor((Math.random() * pieces.length))], falling: true}
+    while (this.nextPiece == this.piece) {
+      this.nextPiece.blocks = pieces[Math.floor((Math.random() * pieces.length))]
+    }
+
+    this.buffer(60).then(() => {
+      this.startFallTimer()
+      this.#drawPiece()
+      this.#drawNextPiece()
+    })
   }
 
   startInputBuffer() {
@@ -164,7 +200,7 @@ export default class extends Controller {
       this.#moveRight()
     }
 
-    if (this.inputs.includes('arrowdown') || this.inputs.includes('s')) {
+    if ((!this.disableDown && this.inputs.includes('arrowdown')) || (!this.disableDown && this.inputs.includes('s'))) {
       this.stopFallTimer()
       this.#moveDown()
       this.startFallTimer()
@@ -173,13 +209,14 @@ export default class extends Controller {
     this.buffer().then(() => this.startInputBuffer())
   }
 
-  buffer() {
-    return new Promise(resolve => setTimeout(resolve, this.frame * 3));
+  buffer(num = 3) {
+    return new Promise(resolve => setTimeout(resolve, this.frame * num));
   }
 
   mute(e) {
     this.musicTarget.volume = 0
     this.loseAudioTarget.volume = 0
+    this.lineClearAudioTarget.volume = 0
     e.currentTarget.style.display = 'none'
     this.unmuteBtnTarget.style.display = 'inline-block'
   }
@@ -187,6 +224,7 @@ export default class extends Controller {
   unmute(e) {
     this.musicTarget.volume = 0.35
     this.loseAudioTarget.volume = 0.35
+    this.lineClearAudioTarget.volume = 0.75
     e.currentTarget.style.display = 'none'
     this.muteBtnTarget.style.display = 'inline-block'
   }
@@ -245,6 +283,7 @@ export default class extends Controller {
     this.#destroyFullLine()
     if (this.game) {
       this.newPiece()
+      this.disableDown = false
     }
   }
 
@@ -309,9 +348,25 @@ export default class extends Controller {
       })
       this.#drawPiece()
     } else {
-      this.#stopFalling()
+      this.disableDown = true
+
+      this.buffer(5).then(() => {
+        const canMove = this.piece.blocks.every((block) => {
+          return block.y < this.rows &&
+          !document.getElementById(`${block.x},${block.y + 1}`).classList.value.includes("taken") &&
+          this.piece.falling
+        })
+
+        if (canMove) {
+          this.#drawPiece()
+        } else {
+          this.#stopFalling()
+        }
+
+        this.disableDown = false
+      })
     }
-  }
+    }
 
   #rotate() {
 
@@ -417,23 +472,33 @@ export default class extends Controller {
       })
 
       if (fullLine) {
+
         this.destroyedLines += 1
         fullLines += 1
+        this.lineClearAudioTarget.play()
         const rowYPosition = parseInt(spacesArray[0].id.split(',')[1])
         spacesArray.forEach((space) => {
-          space.className = "grid empty"
+          space.classList.add("no-borders")
         })
+        row.classList.add("explosion")
 
-        this.gridTargets.reverse().forEach((space) => {
-          const coordinates = space.id.split(',')
-          const x = parseInt(coordinates[0])
-          const y = parseInt(coordinates[1])
+        this.buffer(60).then(() => {
+          row.classList.remove("explosion")
+          spacesArray.forEach((space) => {
+            space.className = "grid empty"
+          })
 
-          if (y < rowYPosition) {
-            const block = space.className
-            space.className = 'grid empty'
-            document.getElementById(`${x},${y + 1}`).className = block
-          }
+          this.gridTargets.reverse().forEach((space) => {
+            const coordinates = space.id.split(',')
+            const x = parseInt(coordinates[0])
+            const y = parseInt(coordinates[1])
+
+            if (y < rowYPosition) {
+              const block = space.className
+              space.className = 'grid empty'
+              document.getElementById(`${x},${y + 1}`).className = block
+            }
+          })
         })
       }
     })
@@ -454,8 +519,8 @@ export default class extends Controller {
 
     if (fullLines > 0) {
       this.#drawScore()
-      if (this.speed > 300) {
-        this.speed = 1000 - (50 * Math.floor(this.destroyedLines / 10))
+      if (this.speed > 120) {
+        this.speed = 1000 - (80 * Math.floor(this.destroyedLines / 10))
       }
       this.#drawLevel()
     }
