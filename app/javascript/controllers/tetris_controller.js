@@ -181,14 +181,14 @@ export default class extends Controller {
     this.musicTarget.volume = 0
     this.loseAudioTarget.volume = 0
     e.currentTarget.style.display = 'none'
-    this.unmuteBtnTarget.style.display = 'block'
+    this.unmuteBtnTarget.style.display = 'inline-block'
   }
 
   unmute(e) {
     this.musicTarget.volume = 0.35
     this.loseAudioTarget.volume = 0.35
     e.currentTarget.style.display = 'none'
-    this.muteBtnTarget.style.display = 'block'
+    this.muteBtnTarget.style.display = 'inline-block'
   }
 
   #drawPiece() {
