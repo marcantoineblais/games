@@ -29,7 +29,7 @@ h1 {
     left: 0;
     right: 0;
     z-index: 1;
-    background-color: #00000055;
+    background-color: #00000088;
     color: white;
     font-size: 48px;
     justify-content: center;
@@ -39,6 +39,22 @@ h1 {
 
   .grid {
     border: 1px grey solid;
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    padding: 0;
+    margin: -0.5px;
+  }
+
+  .next-piece {
+    border: #00000055 1px solid;
+    border-radius: 5px;
+    padding: 12px;
+    width: fit-content;
+    height: fit-content;
+  }
+
+  .next-grid {
     width: 25px;
     height: 25px;
     display: inline-block;

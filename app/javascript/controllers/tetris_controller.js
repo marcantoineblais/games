@@ -2,7 +2,7 @@ import { Controller } from 'stimulus';
 
 export default class extends Controller {
 
-  static targets = ['grid', 'row', 'startBtn', 'replayBtn', 'gameOver', 'score', 'level']
+  static targets = ['grid', 'nextGrid', 'row', 'startBtn', 'replayBtn', 'gameOver', 'score', 'level']
 
   connect() {
     const game = this.element
@@ -56,17 +56,17 @@ export default class extends Controller {
     ]
 
     const reversedLPiece = [
-      {color: 'purple', radiusX: -1, radiusY: 1, x: 6, y: 2},
-      {color: 'purple', radiusX: 0, radiusY: 0, x: 5, y: 2},
-      {color: 'purple', radiusX: 1, radiusY: 1, x: 5, y: 1},
-      {color: 'purple', radiusX: 2, radiusY: 2, x: 5, y: 0}
+      {color: 'purple', radiusX: -1, radiusY: 1, x: 7, y: 2},
+      {color: 'purple', radiusX: 0, radiusY: 0, x: 6, y: 2},
+      {color: 'purple', radiusX: 1, radiusY: 1, x: 6, y: 1},
+      {color: 'purple', radiusX: 2, radiusY: 2, x: 6, y: 0}
     ]
 
     const zPiece = [
-      {color: 'blue', radiusX: 1, radiusY: -1, x: 4, y: 1},
-      {color: 'blue', radiusX: 0, radiusY: 0, x: 5, y: 1},
-      {color: 'blue', radiusX: 1, radiusY: 1, x: 5, y: 0},
-      {color: 'blue', radiusX: 0, radiusY: 2, x: 6, y: 0}
+      {color: 'blue', radiusX: 1, radiusY: -1, x: 5, y: 1},
+      {color: 'blue', radiusX: 0, radiusY: 0, x: 6, y: 1},
+      {color: 'blue', radiusX: 1, radiusY: 1, x: 6, y: 0},
+      {color: 'blue', radiusX: 0, radiusY: 2, x: 7, y: 0}
     ]
 
     const reversedZPiece = [
@@ -92,9 +92,16 @@ export default class extends Controller {
 
     const pieces = [straigtPiece, lPiece, reversedLPiece, zPiece, reversedZPiece, tPiece, squarePiece]
 
-    this.piece = {blocks: pieces[Math.floor((Math.random() * 7))], falling: true}
+    if (this.nextPiece) {
+      this.piece = this.nextPiece
+    } else {
+      this.piece = {blocks: pieces[Math.floor((Math.random() * 7))], falling: true}
+    }
+
+    this.nextPiece = {blocks: pieces[Math.floor((Math.random() * 7))], falling: true}
     this.startFallTimer()
     this.#drawPiece()
+    this.#drawNextPiece()
   }
 
   startInputBuffer() {
@@ -171,6 +178,22 @@ export default class extends Controller {
       })
     })
   }
+
+  #drawNextPiece() {
+    this.nextGridTargets.forEach((space) => {
+      space.className = "next-grid"
+    })
+
+    this.nextPiece.blocks.forEach((block) => {
+      this.nextGridTargets.forEach((space) => {
+        if (space.id === `${block.x},${block.y}`) {
+          space.classList.remove("empty")
+          space.classList.add(`${block.color}`)
+        }
+      })
+    })
+  }
+
 
   #stopFalling() {
     this.stopFallTimer()
