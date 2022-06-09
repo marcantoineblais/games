@@ -11,7 +11,17 @@
     </div>
     <% y += 1 %>
   <% end %>
-  <button class="m-3" data-tetris-target="startBtn" data-action="click->tetris#start">START</button>
+
+  <div class="volume-control text-end">
+    <p>
+      <i class="fa-solid fa-volume-high"  data-action="click->tetris#mute" data-tetris-target="muteBtn"></i>
+      <i class="fa-solid fa-volume-xmark" data-action="click->tetris#unmute" data-tetris-target="unmuteBtn"></i>
+    </p>
+  </div>
+
+  <audio data-tetris-target="music" src="<%= audio_path 'tetris.m4a'%>" type="audio/m4a" loop></audio>
+  <audio data-tetris-target="loseAudio" src="<%= audio_path 'lose.m4a'%>" type="audio/m4a"></audio>
+  <button id="start" data-tetris-target="startBtn" data-action="click->tetris#start">START</button>
 
   <div id="game-over" data-tetris-target="gameOver">
     <H2>GAME OVER</H2>

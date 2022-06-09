@@ -2,7 +2,20 @@ import { Controller } from 'stimulus';
 
 export default class extends Controller {
 
-  static targets = ['grid', 'nextGrid', 'row', 'startBtn', 'replayBtn', 'gameOver', 'score', 'level']
+  static targets = [
+    'grid',
+    'nextGrid',
+    'row',
+    'startBtn',
+    'replayBtn',
+    'gameOver',
+    'score',
+    'level',
+    'music',
+    'loseAudio',
+    'muteBtn',
+    'unmuteBtn'
+  ]
 
   connect() {
     const game = this.element
@@ -14,10 +27,13 @@ export default class extends Controller {
     this.score = 0
     this.frame = 16.6
     this.game = true
+    this.musicTarget.volume = 0.35
+    this.loseAudioTarget.volume = 0.35
   }
 
   start(e) {
     e.currentTarget.style.display = "none"
+    this.musicTarget.play()
     this.startInputBuffer()
     this.newPiece()
   }
@@ -36,6 +52,8 @@ export default class extends Controller {
 
     this.#drawLevel()
     this.#drawScore()
+    this.musicTarget.currentTime = 0
+    this.musicTarget.play()
     this.newPiece()
   }
 
@@ -159,6 +177,20 @@ export default class extends Controller {
     return new Promise(resolve => setTimeout(resolve, this.frame * 3));
   }
 
+  mute(e) {
+    this.musicTarget.volume = 0
+    this.loseAudioTarget.volume = 0
+    e.currentTarget.style.display = 'none'
+    this.unmuteBtnTarget.style.display = 'block'
+  }
+
+  unmute(e) {
+    this.musicTarget.volume = 0.35
+    this.loseAudioTarget.volume = 0.35
+    e.currentTarget.style.display = 'none'
+    this.muteBtnTarget.style.display = 'block'
+  }
+
   #drawPiece() {
     this.piece.blocks.forEach((block) => {
       this.gridTargets.forEach((space) => {
@@ -168,6 +200,8 @@ export default class extends Controller {
           this.stopInputBuffer()
           this.gameOverTarget.style.display = 'flex'
           this.replayBtnTarget.style.display = "block"
+          this.musicTarget.pause()
+          this.loseAudioTarget.play()
         }
 
         if (space.id === `${block.x},${block.y}`) {
