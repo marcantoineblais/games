@@ -179,19 +179,60 @@ h1 {
 
   .explosion {
     transform: scale(1.5);
-    transform: translateY(-100px);
+    transform-origin: 50% 100%;
     background-image: url('explosion.png')!important;
     background-position: center;
     background-size: cover;
+    background-repeat: no-repeat;
     border: none!important;
     transition-duration: 1000ms;
     z-index: 1000;
-    padding-top: 400px;
-    margin-top: -400px;
+    padding-top: 350px;
+    margin-top: -350px;
   }
 
   .no-borders {
     border: none!important;
     background-color: #00000000;
+  }
+
+  @media only screen and (max-height: 1080px) {
+    .grid {
+      height: 32px;
+      width: 32px;
+    }
+
+    .volume-control {
+      width: 360px;
+
+      p {
+        font-size: 20px;
+      }
+    }
+
+    .explosion {
+      padding-top: 282px;
+      margin-top: -282px;
+    }
+  }
+
+  @media only screen and (max-height: 900px) {
+    .grid {
+      height: 25px;
+      width: 25px;
+    }
+
+    .volume-control {
+      width: 300px;
+
+      p {
+        font-size: 16px;
+      }
+    }
+
+    .explosion {
+      padding-top: 220px;
+      margin-top: -220px;
+    }
   }
 }

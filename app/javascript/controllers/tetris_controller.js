@@ -51,7 +51,7 @@ export default class extends Controller {
     this.score = 0
     this.destroyedLines = 0
     this.game = true
-
+    this.newPieceCue = false
     this.#drawLevel()
     this.#drawScore()
     this.musicTarget.currentTime = 0
@@ -237,13 +237,7 @@ export default class extends Controller {
     this.piece.blocks.forEach((block) => {
       this.gridTargets.forEach((space) => {
         if (space.id === `${block.x},${block.y}` && space.classList.value.includes('taken')) {
-          this.game = false
-          this.stopFallTimer()
-          this.stopInputBuffer()
-          this.gameOverTarget.style.display = 'flex'
-          this.replayBtnTarget.style.display = "block"
-          this.musicTarget.pause()
-          this.loseAudioTarget.play()
+          this.#endOfGame()
         }
 
         if (space.id === `${block.x},${block.y}`) {
@@ -296,6 +290,15 @@ export default class extends Controller {
         })
       })
     }
+  }
+
+  #endOfGame() {
+    this.game = false
+    this.stopFallTimer()
+    this.gameOverTarget.style.display = 'flex'
+    this.replayBtnTarget.style.display = "block"
+    this.musicTarget.pause()
+    this.loseAudioTarget.play()
   }
 
   #moveLeft() {
