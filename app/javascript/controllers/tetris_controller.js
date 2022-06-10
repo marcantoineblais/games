@@ -62,10 +62,10 @@ export default class extends Controller {
   newPiece() {
 
     const straigtPiece = [
-      {color: 'pink', radiusX: -2, radiusY: -2, x: 6, y: 3},
-      {color: 'pink', radiusX: -1, radiusY: -1, x: 6, y: 2},
-      {color: 'pink', radiusX: 0, radiusY: 0, x: 6, y: 1},
-      {color: 'pink', radiusX: 1, radiusY: 1, x: 6, y: 0}
+      {color: 'pink', radiusX: -1, radiusY: -1, x: 6, y: 3},
+      {color: 'pink', radiusX: 0, radiusY: 0, x: 6, y: 2},
+      {color: 'pink', radiusX: 1, radiusY: 1, x: 6, y: 1},
+      {color: 'pink', radiusX: 2, radiusY: 2, x: 6, y: 0}
     ]
 
     const lPiece = [
@@ -100,14 +100,14 @@ export default class extends Controller {
       {color: 'green', radiusX: -1, radiusY: -1, x: 6, y: 2},
       {color: 'green', radiusX: -1, radiusY: 1, x: 7, y: 1},
       {color: 'green', radiusX: 0, radiusY: 0, x: 6, y: 1},
-      {color: 'green', radiusX: 1, radiusY: 1, x: 6, y: 0}
+      {color: 'green', radiusX: 1, radiusY: 1, x: 6, y: 0},
     ]
 
     const squarePiece = [
       {color: 'yellow', radiusX: 0, radiusY: 0, x: 7, y: 1},
       {color: 'yellow', radiusX: 0, radiusY: 0, x: 6, y: 1},
       {color: 'yellow', radiusX: 0, radiusY: 0, x: 7, y: 0},
-      {color: 'yellow', radiusX: 0, radiusY: 0, x: 6, y: 0}
+      {color: 'yellow', radiusX: 0, radiusY: 0, x: 6, y: 0},
     ]
 
     const singlePiece = [
@@ -143,7 +143,7 @@ export default class extends Controller {
     if (this.nextPiece) {
       this.piece = this.nextPiece
     } else {
-      this.piece = {blocks: pieces[Math.floor((Math.random() * 7))], falling: true}
+      this.piece = {blocks: pieces[Math.floor((Math.random() *  pieces.length))], falling: true}
     }
 
     this.nextPiece = {blocks: pieces[Math.floor((Math.random() * pieces.length))], falling: true}
@@ -153,6 +153,7 @@ export default class extends Controller {
     }
 
 
+    this.rotated = 0
     this.startFallTimer()
     this.#drawPiece()
     this.#drawNextPiece()
@@ -378,7 +379,7 @@ export default class extends Controller {
     } else {
       this.disableDown = true
 
-      this.buffer(5).then(() => {
+      this.buffer().then(() => {
         const canMove = this.piece.blocks.every((block) => {
           return block.y < this.rows &&
           !document.getElementById(`${block.x},${block.y + 1}`).classList.value.includes("taken") &&
@@ -461,33 +462,34 @@ export default class extends Controller {
       this.#afterRotation()
       this.#drawPiece()
     }
-
   }
 
   #afterRotation() {
+
+    this.rotated += 1
+
     this.piece.blocks.forEach((block) => {
       block.x += block.radiusX
       block.y += block.radiusY
       let buffer
 
-      if (block.radiusX <= 0 && block.radiusY < 0) {
-        buffer = block.radiusX
-        block.radiusX = -block.radiusY
-        block.radiusY = buffer
-      } else if (block.radiusX >= 0 && block.radiusY <= 0) {
-        buffer = block.radiusX
-        block.radiusX = -block.radiusY
-        block.radiusY = buffer
-      } else if (block.radiusX >= 0 && block.radiusY >= 0) {
-        buffer = block.radiusX
-        block.radiusX = -block.radiusY
-        block.radiusY = buffer
-      } else if (block.radiusX < 0 && block.radiusY >= 0) {
-        buffer = block.radiusX
-        block.radiusX = -block.radiusY
-        block.radiusY = buffer
-      }
+      buffer = block.radiusX
+      block.radiusX = -block.radiusY
+      block.radiusY = buffer
     })
+
+    if (this.rotated == 2 && ['pink', 'orange', 'purple', 'blue', 'red'].includes(this.piece.blocks[0].color)) {
+      const piece = this.piece
+      this.piece.blocks[0].radiusX += 1
+      this.piece.blocks[0].radiusY += 1
+      this.piece.blocks[1].radiusX += 1
+      this.piece.blocks[1].radiusY += 1
+      this.piece.blocks[2].radiusX += 1
+      this.piece.blocks[2].radiusY += 1
+      this.piece.blocks[3].radiusX += 1
+      this.piece.blocks[3].radiusY += 1
+      this.rotated = 0
+    }
   }
 
   #destroyFullLine() {
@@ -549,8 +551,8 @@ export default class extends Controller {
 
     if (fullLines > 0) {
       this.#drawScore()
-      if (this.speed > 40) {
-        this.speed = 1000 - (80 * Math.floor(this.destroyedLines / 10))
+      if (this.speed > 120) {
+        this.speed = 800 * (0.8 ** Math.floor(this.destroyedLines / 10))
       }
       this.#drawLevel()
     }
