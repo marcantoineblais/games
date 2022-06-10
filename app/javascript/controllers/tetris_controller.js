@@ -213,8 +213,8 @@ export default class extends Controller {
     return new Promise(resolve => setTimeout(resolve, this.frame * num));
   }
 
-  #waitForIt() {
-    return new Promise((resolve) => resolve())
+  #waitForIt(param) {
+    return new Promise((resolve) => resolve(param))
   }
 
   mute(e) {
@@ -272,7 +272,6 @@ export default class extends Controller {
 
 
   #stopFalling() {
-
     if (!this.newPieceCue) {
       this.newPieceCue = true
       this.stopFallTimer()
@@ -287,8 +286,8 @@ export default class extends Controller {
         })
       })
 
-      this.#destroyFullLine().then(() => {
-        this.buffer(30).then(() => {
+      this.#destroyFullLine().then((frames) => {
+        this.buffer(frames).then(() => {
           if (this.game) {
             this.newPiece()
             this.disableDown = false
@@ -476,6 +475,7 @@ export default class extends Controller {
 
   #destroyFullLine() {
     let fullLines = 0
+    let frames = 15
 
     this.rowTargets.forEach((row) => {
       const spacesArray = Array.from(row.children)
@@ -484,9 +484,9 @@ export default class extends Controller {
       })
 
       if (fullLine) {
-
         this.destroyedLines += 1
         fullLines += 1
+        frames = 60
         this.lineClearAudioTarget.play()
         const rowYPosition = parseInt(spacesArray[0].id.split(',')[1])
         spacesArray.forEach((space) => {
@@ -516,7 +516,7 @@ export default class extends Controller {
         this.#score(fullLines)
       }
     })
-    return this.#waitForIt()
+    return this.#waitForIt(frames)
   }
 
   #score(fullLines) {
