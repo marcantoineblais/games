@@ -22,7 +22,7 @@ export default class extends Controller {
     const game = this.element
     this.cols = 11
     this.rows = 21
-    this.speed = 1000
+    this.speed = 800
     this.destroyedLines = 0
     this.inputs = []
     this.score = 0
@@ -190,23 +190,37 @@ export default class extends Controller {
   }
 
   move() {
-    this.stopInputBuffer()
-
     if (this.inputs.includes('arrowleft') || this.inputs.includes('a')) {
-      this.#moveLeft()
+      if(!this.leftCue) {
+        this.leftCue = true
+        this.#moveLeft()
+        this.buffer(4).then(() => {
+         this.leftCue = false
+        })
+      }
     }
 
     if (this.inputs.includes('arrowright') || this.inputs.includes('d')) {
-      this.#moveRight()
+      if(!this.rightCue) {
+        this.rightCue = true
+        this.#moveRight()
+        this.buffer(4).then(() => {
+         this.rightCue = false
+        })
+      }
     }
 
     if ((!this.disableDown && this.inputs.includes('arrowdown')) || (!this.disableDown && this.inputs.includes('s'))) {
-      this.stopFallTimer()
-      this.#moveDown()
-      this.startFallTimer()
+      if(!this.downCue) {
+        this.downCue = true
+        this.stopFallTimer()
+        this.#moveDown()
+        this.buffer(1).then(() => {
+          this.startFallTimer()
+          this.downCue = false
+        })
+      }
     }
-
-    this.buffer().then(() => this.startInputBuffer())
   }
 
   buffer(num = 3) {
@@ -535,7 +549,7 @@ export default class extends Controller {
 
     if (fullLines > 0) {
       this.#drawScore()
-      if (this.speed > 120) {
+      if (this.speed > 40) {
         this.speed = 1000 - (80 * Math.floor(this.destroyedLines / 10))
       }
       this.#drawLevel()
