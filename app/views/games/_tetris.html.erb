@@ -1,17 +1,18 @@
 <div class="tetris" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#removeInput">
   <h3 data-tetris-target="level">Level 1</h3>
-  <% y = 0 %>
-  <% 22.times do %>
-    <div class="d-flex justify-content-center" data-tetris-target="row">
-      <% x = 0 %>
-      <% 12.times do %>
-        <div id="<%= x %>,<%= y %>" class="grid empty" data-tetris-target="grid"></div>
-        <% x += 1 %>
-      <% end %>
-    </div>
-    <% y += 1 %>
-  <% end %>
-
+  <div class="board">
+    <% y = 0 %>
+    <% 22.times do %>
+      <div class="d-flex justify-content-center" data-tetris-target="row">
+        <% x = 0 %>
+        <% 12.times do %>
+          <div id="<%= x %>,<%= y %>" class="grid empty" data-tetris-target="grid"></div>
+          <% x += 1 %>
+        <% end %>
+      </div>
+      <% y += 1 %>
+    <% end %>
+  </div>
   <div class="volume-control text-end">
     <p>
       <i class="fa-solid fa-volume-high"  data-action="click->tetris#mute" data-tetris-target="muteBtn"></i>
@@ -41,7 +42,7 @@
         <div class="d-flex justify-content-center">
           <% x = 4 %>
           <% 5.times do %>
-            <div id="<%= x %>,<%= y %>" class="next-grid empty" data-tetris-target="nextGrid"></div>
+            <div id="next-<%= x %>,<%= y %>" class="next-grid empty" data-tetris-target="nextGrid"></div>
             <% x += 1 %>
           <% end %>
         </div>

@@ -36,7 +36,6 @@ export default class extends Controller {
   start(e) {
     e.currentTarget.style.display = "none"
     this.musicTarget.play()
-    this.startInputBuffer()
     this.newPiece()
   }
 
@@ -152,15 +151,23 @@ export default class extends Controller {
       this.nextPiece.blocks = pieces[Math.floor((Math.random() * pieces.length))]
     }
 
+    this.piece.blocks.forEach((block) => {
+      if (document.getElementById(`${block.x},${block.y}`).classList.value.includes('taken')) {
+        this.#endOfGame()
+      }
+    })
 
     this.rotated = 0
     this.startFallTimer()
-    this.#drawPiece()
     this.#drawNextPiece()
+    this.startInputBuffer()
   }
 
   startInputBuffer() {
-    this.keysInput = setInterval(() => {this.move()}, this.frame)
+    this.keysInput = setInterval(() => {
+      this.move()
+      this.#drawPiece()
+    }, this.frame)
   }
 
   stopInputBuffer() {
@@ -173,6 +180,7 @@ export default class extends Controller {
   }
 
   stopFallTimer() {
+    console.log('stopped');
     clearInterval(this.fallTimer)
   }
 
@@ -250,18 +258,8 @@ export default class extends Controller {
 
   #drawPiece() {
     this.piece.blocks.forEach((block) => {
-      this.gridTargets.forEach((space) => {
-        if (space.id === `${block.x},${block.y}` && space.classList.value.includes('taken')) {
-          this.#endOfGame()
-        }
-
-        if (space.id === `${block.x},${block.y}`) {
-          space.classList.remove("empty")
-          space.classList.add(`${block.color}`)
-          space.classList.add("active")
-        }
+        document.getElementById(`${block.x},${block.y}`).className = `grid active ${block.color}`
       })
-    })
   }
 
   #drawNextPiece() {
@@ -270,29 +268,20 @@ export default class extends Controller {
     })
 
     this.nextPiece.blocks.forEach((block) => {
-      this.nextGridTargets.forEach((space) => {
-        if (space.id === `${block.x},${block.y}`) {
-          space.classList.remove("empty")
-          space.classList.add(`${block.color}`)
-        }
-      })
+      document.getElementById(`next-${block.x},${block.y}`).classList.add(`${block.color}`)
     })
   }
 
 
   #stopFalling() {
     if (!this.newPieceCue) {
-      this.newPieceCue = true
+      this.stopInputBuffer()
       this.stopFallTimer()
+      this.newPieceCue = true
       this.piece.falling = false
 
       this.piece.blocks.forEach((block) => {
-        this.gridTargets.forEach((space) => {
-          if (space.id === `${block.x},${block.y}`) {
-            space.classList.remove("active")
-            space.classList.add("taken")
-          }
-        })
+        document.getElementById(`${block.x},${block.y}`).className = `taken grid ${block.color}`
       })
 
       this.#destroyFullLine().then((frames) => {
@@ -309,6 +298,7 @@ export default class extends Controller {
 
   #endOfGame() {
     this.game = false
+    this.stopInputBuffer()
     this.stopFallTimer()
     this.gameOverTarget.style.display = 'flex'
     this.replayBtnTarget.style.display = "block"
@@ -325,15 +315,9 @@ export default class extends Controller {
 
     if (canMove) {
       this.piece.blocks.forEach((block) => {
-        this.gridTargets.forEach((space) => {
-          if (space.id === `${block.x},${block.y}`) {
-            space.classList.add("empty")
-            space.classList.remove(`${block.color}`)
-          }
-        })
+        document.getElementById(`${block.x},${block.y}`).className = "grid empty"
         block.x -= 1
       })
-      this.#drawPiece()
     }
   }
 
@@ -346,54 +330,44 @@ export default class extends Controller {
 
     if (canMove) {
       this.piece.blocks.forEach((block) => {
-        this.gridTargets.forEach((space) => {
-          if (space.id === `${block.x},${block.y}`) {
-            space.classList.add("empty")
-            space.classList.remove(`${block.color}`)
-          }
-        })
+        document.getElementById(`${block.x},${block.y}`).className = "grid empty"
         block.x += 1
       })
-      this.#drawPiece()
     }
   }
 
   #moveDown() {
-    const canMove = this.piece.blocks.every((block) => {
-      return block.y < this.rows &&
-      !document.getElementById(`${block.x},${block.y + 1}`).classList.value.includes("taken") &&
-      this.piece.falling
-    })
+    if (!this.disableDown) {
+      const canMove = this.piece.blocks.every((block) => {
+        return block.y < this.rows &&
+        !document.getElementById(`${block.x},${block.y + 1}`).classList.value.includes("taken") &&
+        this.piece.falling
+      })
 
-    if (canMove) {
-      this.piece.blocks.forEach((block) => {
-        this.gridTargets.forEach((space) => {
-          if (space.id === `${block.x},${block.y}`) {
-            space.classList.add("empty")
-            space.classList.remove(`${block.color}`)
+
+      if (canMove) {
+        this.piece.blocks.forEach((block) => {
+          document.getElementById(`${block.x},${block.y}`).className = "grid empty"
+          block.y += 1
+        })
+
+      } else {
+        this.disableDown = true
+
+        this.buffer().then(() => {
+          const canMove = this.piece.blocks.every((block) => {
+            return block.y < this.rows &&
+            !document.getElementById(`${block.x},${block.y + 1}`).classList.value.includes("taken") &&
+            this.piece.falling
+          })
+
+          if (!canMove) {
+            this.#stopFalling()
           }
+
+          this.disableDown = false
         })
-        block.y += 1
-      })
-      this.#drawPiece()
-    } else {
-      this.disableDown = true
-
-      this.buffer().then(() => {
-        const canMove = this.piece.blocks.every((block) => {
-          return block.y < this.rows &&
-          !document.getElementById(`${block.x},${block.y + 1}`).classList.value.includes("taken") &&
-          this.piece.falling
-        })
-
-        if (canMove) {
-          this.#drawPiece()
-        } else {
-          this.#stopFalling()
-        }
-
-        this.disableDown = false
-      })
+      }
     }
   }
 
@@ -451,16 +425,10 @@ export default class extends Controller {
 
     if (canMove) {
       this.piece.blocks.forEach((block) => {
-        this.gridTargets.forEach((space) => {
-          if (space.id === `${block.x},${block.y}`) {
-            space.classList.add("empty")
-            space.classList.remove(`${block.color}`)
-          }
-        })
+        document.getElementById(`${block.x},${block.y}`).className = "grid empty"
         block.x += offSet
       })
       this.#afterRotation()
-      this.#drawPiece()
     }
   }
 
@@ -479,15 +447,10 @@ export default class extends Controller {
     })
 
     if (this.rotated == 2 && ['pink', 'orange', 'purple', 'blue', 'red'].includes(this.piece.blocks[0].color)) {
-      const piece = this.piece
-      this.piece.blocks[0].radiusX += 1
-      this.piece.blocks[0].radiusY += 1
-      this.piece.blocks[1].radiusX += 1
-      this.piece.blocks[1].radiusY += 1
-      this.piece.blocks[2].radiusX += 1
-      this.piece.blocks[2].radiusY += 1
-      this.piece.blocks[3].radiusX += 1
-      this.piece.blocks[3].radiusY += 1
+      this.piece.blocks.forEach((block) => {
+        block.radiusX += 1
+        block.radiusY += 1
+      })
       this.rotated = 0
     }
   }
