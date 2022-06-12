@@ -180,7 +180,6 @@ export default class extends Controller {
   }
 
   stopFallTimer() {
-    console.log('stopped');
     clearInterval(this.fallTimer)
   }
 
