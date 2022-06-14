@@ -27,7 +27,7 @@ a {
 }
 
 input {
-  background: linear-gradient(140deg, #000, #000, #000, #000, #333)!important;
+  background: linear-gradient(140deg, #444, #444, #444, #444, #666)!important;
   padding: 0.5em 1em;
   font-size: 16px!important;
   border-radius: 8px!important;
@@ -40,7 +40,17 @@ input {
   }
 }
 
-h2 {
+.form-bg {
+  display: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #000a;
+}
+
+
+h2, h3, p {
   color: #eee;
   text-align: center;
 }
@@ -48,6 +58,7 @@ h2 {
 .field {
   label {
     color: #eee!important;
+    text-shadow: 0 0 2px #000;
   }
 
   em {
@@ -60,7 +71,7 @@ h2 {
   }
 
   input {
-    background: linear-gradient(140deg, #000, #000, #000, #000, #333)!important;
+    background: linear-gradient(140deg, #444, #444, #444, #444, #666)!important;
     padding: 0.5em 1em;
     font-size: 16px!important;
     border-radius: 8px!important;

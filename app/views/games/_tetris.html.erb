@@ -15,12 +15,12 @@
           <% y += 1 %>
         <% end %>
       </div>
-      <div class="volume-control d-flex justify-content-between align-items-center p-3">
-      <button id="start" data-tetris-target="startBtn" data-action="click->tetris#start">START</button>
+      <div class="volume-control d-flex flex-row-reverse justify-content-between align-items-center p-3">
         <p>
           <i class="fa-solid fa-volume-high"  data-action="click->tetris#mute" data-tetris-target="muteBtn"></i>
           <i class="fa-solid fa-volume-xmark" data-action="click->tetris#unmute" data-tetris-target="unmuteBtn"></i>
         </p>
+        <button id="start" data-tetris-target="startBtn" data-action="click->tetris#start">START</button>
       </div>
     </div>
 
