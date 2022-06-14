@@ -18,6 +18,10 @@ export default class extends Controller {
     'unmuteBtn'
   ]
 
+  static values = {
+    link: String
+  }
+
   connect() {
     const game = this.element
     this.cols = 11
@@ -295,14 +299,15 @@ export default class extends Controller {
     }
   }
 
-  #endOfGame() {
+  async #endOfGame() {
     this.game = false
     this.stopInputBuffer()
     this.stopFallTimer()
-    this.gameOverTarget.style.display = 'flex'
-    this.replayBtnTarget.style.display = "block"
     this.musicTarget.pause()
     this.loseAudioTarget.play()
+    const gameOverWindow = await this.#registerScore()
+    this.gameOverTarget.style.display = 'flex'
+    this.replayBtnTarget.style.display = "block"
   }
 
   #moveLeft() {
@@ -526,5 +531,15 @@ export default class extends Controller {
 
   #drawScore() {
     this.scoreTarget.innerText = this.score
+  }
+
+  async #registerScore() {
+    const csrfToken = document.querySelector("[name='csrf-token']").content
+    console.log(csrfToken)
+    const url = this.linkValue
+    const options = {method: 'POST', headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRFToken': csrfToken }, body: JSON.stringify({'points': this.score})}
+    const res = await fetch(url, options)
+    const data = res.json
+    console.log(data)
   }
 }

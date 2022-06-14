@@ -1,4 +1,4 @@
-<div class="tetris" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#removeInput">
+<div class="tetris" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#removeInput" data-tetris-link-value="<%= game_score_index_path(game) %>">
   <h2 class="text-center" data-tetris-target="level">Level 1</h2>
   <div class="d-flex justify-content-center">
     <div id="high-scores" class="high-scores scoreboard me-5">
