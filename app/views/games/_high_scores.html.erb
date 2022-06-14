@@ -1,0 +1,10 @@
+<h3 class="mt-1">High scores</h3>
+
+<div class="d-flex flex-column mt-4">
+  <% scores.order(points: :desc).first(10).each do |score| %>
+    <div class="d-flex justify-content-between">
+      <p><%= score.user.username %></p>
+      <p><%= score.points %></p>
+    </div>
+  <% end %>
+</div>

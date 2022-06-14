@@ -20,6 +20,12 @@ h1 {
     padding-left: 3em;
   }
 
+  #high-scores {
+    min-width: fit-content;
+    height: fit-content;
+    padding: 0 1em;
+  }
+
   #game-over {
     display: none;
     position: absolute;

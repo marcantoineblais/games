@@ -1,6 +1,9 @@
 <div class="tetris" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#removeInput">
-  <h3 class="text-center" data-tetris-target="level">Level 1</h3>
+  <h2 class="text-center" data-tetris-target="level">Level 1</h2>
   <div class="d-flex justify-content-center">
+    <div id="high-scores" class="high-scores scoreboard me-5">
+      <%= render 'games/high_scores.html.erb', scores: game.scores %>
+    </div>
     <div>
       <div class="board">
         <% y = 0 %>
