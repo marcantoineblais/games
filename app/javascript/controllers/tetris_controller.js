@@ -494,9 +494,9 @@ export default class extends Controller {
           })
 
         })
-        this.#score(fullLines)
       }
     })
+    this.#score(fullLines)
     return this.#waitForIt(frames)
   }
 

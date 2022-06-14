@@ -1,55 +1,57 @@
 <div class="tetris" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#removeInput">
-  <h3 data-tetris-target="level">Level 1</h3>
-  <div class="board">
-    <% y = 0 %>
-    <% 22.times do %>
-      <div class="d-flex justify-content-center" data-tetris-target="row">
-        <% x = 0 %>
-        <% 12.times do %>
-          <div id="<%= x %>,<%= y %>" class="grid empty" data-tetris-target="grid"></div>
-          <% x += 1 %>
+  <h3 class="text-center" data-tetris-target="level">Level 1</h3>
+  <div class="d-flex justify-content-center">
+    <div>
+      <div class="board">
+        <% y = 0 %>
+        <% 22.times do %>
+          <div class="d-flex justify-content-center" data-tetris-target="row">
+            <% x = 0 %>
+            <% 12.times do %>
+              <div id="<%= x %>,<%= y %>" class="grid empty" data-tetris-target="grid"></div>
+              <% x += 1 %>
+            <% end %>
+          </div>
+          <% y += 1 %>
         <% end %>
       </div>
-      <% y += 1 %>
-    <% end %>
-  </div>
-  <div class="volume-control text-end">
-    <p>
-      <i class="fa-solid fa-volume-high"  data-action="click->tetris#mute" data-tetris-target="muteBtn"></i>
-      <i class="fa-solid fa-volume-xmark" data-action="click->tetris#unmute" data-tetris-target="unmuteBtn"></i>
-    </p>
+      <div class="volume-control d-flex justify-content-between align-items-center p-3">
+      <button id="start" data-tetris-target="startBtn" data-action="click->tetris#start">START</button>
+        <p>
+          <i class="fa-solid fa-volume-high"  data-action="click->tetris#mute" data-tetris-target="muteBtn"></i>
+          <i class="fa-solid fa-volume-xmark" data-action="click->tetris#unmute" data-tetris-target="unmuteBtn"></i>
+        </p>
+      </div>
+    </div>
+
+
+    <div id="score">
+      <div class="scoreboard">
+        <h3 class="text-end pe-3">Score</h3>
+        <h3 data-tetris-target="score" class="text-end pe-3">0</h3>
+      </div>
+      <div class="next-piece mt-3 me-3">
+        <% y = -1 %>
+        <% 5.times do %>
+          <div class="d-flex justify-content-center">
+            <% x = 4 %>
+            <% 5.times do %>
+              <div id="next-<%= x %>,<%= y %>" class="next-grid empty" data-tetris-target="nextGrid"></div>
+              <% x += 1 %>
+            <% end %>
+          </div>
+          <% y += 1 %>
+        <% end %>
+      </div>
+    </div>
   </div>
 
-  <button id="start" data-tetris-target="startBtn" data-action="click->tetris#start">START</button>
 
   <div id="game-over" data-tetris-target="gameOver">
     <H2>GAME OVER</H2>
     <button class="m-3" data-tetris-target="replayBtn" data-action="click->tetris#replay">PLAY AGAIN?</button>
   </div>
 
-  <div id="back">
-    <%= link_to 'Back', games_path %>
-  </div>
-
-  <div id="score">
-    <div class="scoreboard">
-      <h3 class="text-end pe-3">Score</h3>
-      <h3 data-tetris-target="score" class="text-end pe-3">0</h3>
-    </div>
-    <div class="next-piece mt-3 me-3">
-      <% y = -1 %>
-      <% 5.times do %>
-        <div class="d-flex justify-content-center">
-          <% x = 4 %>
-          <% 5.times do %>
-            <div id="next-<%= x %>,<%= y %>" class="next-grid empty" data-tetris-target="nextGrid"></div>
-            <% x += 1 %>
-          <% end %>
-        </div>
-        <% y += 1 %>
-      <% end %>
-    </div>
-  </div>
 
   <audio data-tetris-target="music" src="<%= audio_path 'tetris.weba'%>" type="audio/weba" loop></audio>
   <audio data-tetris-target="loseAudio" src="<%= audio_path 'lose.m4a'%>" type="audio/m4a"></audio>

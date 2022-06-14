@@ -11,13 +11,14 @@
   </head>
 
   <body>
+    <%= render 'layouts/navbar.html.erb' %>
+
     <div class="container">
-      <%= render 'layouts/navbar.html.erb' %>
       <%= yield %>
     </div>
-
+    <% if alert || notice %>
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
-
+    <% end %>
   </body>
 </html>

@@ -1,0 +1,79 @@
+button {
+  padding: 0.5em 1em;
+  font-size: 24px!important;
+  border-radius: 8px!important;
+  background: linear-gradient(140deg, #000, #000, #000, #000, #333);
+  color: #eee;
+  border: #222 1px solid;
+  box-shadow: 2px 2px 8px #00000055;
+
+  &:hover {
+    color: #eee;
+    opacity: 0.9
+  }
+}
+
+a {
+  padding: 0.5em 1em;
+  font-size: 16px!important;
+  border-radius: 8px!important;
+  color: #eee!important;
+  text-decoration: none!important;
+
+  &:hover {
+    color: #eee;
+    opacity: 0.9
+  }
+}
+
+input {
+  background: linear-gradient(140deg, #000, #000, #000, #000, #333)!important;
+  padding: 0.5em 1em;
+  font-size: 16px!important;
+  border-radius: 8px!important;
+  color: #eee!important;
+  text-decoration: none!important;
+
+  &:hover {
+    color: #eee;
+    opacity: 0.9
+  }
+}
+
+h2 {
+  color: #eee;
+  text-align: center;
+}
+
+.field {
+  label {
+    color: #eee!important;
+  }
+
+  em {
+    color:#eee;
+  }
+
+
+  .radio {
+    width: fit-content;
+  }
+
+  input {
+    background: linear-gradient(140deg, #000, #000, #000, #000, #333)!important;
+    padding: 0.5em 1em;
+    font-size: 16px!important;
+    border-radius: 8px!important;
+    border: none!important;
+    color: #eee!important;
+    text-decoration: none!important;
+    width: 100%;
+  }
+}
+
+.actions {
+  .submit {
+    text-align: center;
+    width: fit-content;
+  }
+}
