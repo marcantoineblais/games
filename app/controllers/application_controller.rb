@@ -12,8 +12,7 @@ class ApplicationController < ActionController::Base
   private
 
   def store_user_location!
-    print `clear`
-    puts store_location_for(:user, request.fullpath)
+    store_location_for(:user, request.fullpath)
   end
 
   def storable_location?

@@ -7,13 +7,16 @@ export default class extends Controller {
     'nextGrid',
     'row',
     'start',
+    'startBtn',
     'replayBtn',
+    'paused',
     'gameOver',
     'highscores',
     'score',
     'level',
     'music',
     'loseAudio',
+    'pauseAudio',
     'lineClearAudio',
     'muteBtn',
     'unmuteBtn'
@@ -32,15 +35,16 @@ export default class extends Controller {
     this.inputs = []
     this.score = 0
     this.frame = 16.6
-    this.game = true
     this.musicTarget.volume = 0.35
     this.loseAudioTarget.volume = 0.35
+    this.pauseAudioTarget.volume = 0.1
     this.lineClearAudioTarget.volume = 0.75
   }
 
   start() {
     this.startTarget.outerHTML = ""
     this.musicTarget.play()
+    this.game = true
     this.newPiece()
   }
 
@@ -207,12 +211,16 @@ export default class extends Controller {
       }
     }
 
-    if (e.key.toLowerCase() == 'p') {
+    if (e.key.toLowerCase() == 'p' && this.game) {
       if (this.paused) {
-        this.unpause()
+        this.#unpause()
       } else {
-        this.pause()
+        this.#pause()
       }
+    }
+
+    if (e.key.toLowerCase() == 'enter' && !this.game) {
+      this.startBtnTarget.click()
     }
   }
 
@@ -258,6 +266,7 @@ export default class extends Controller {
   mute(e) {
     this.musicTarget.volume = 0
     this.loseAudioTarget.volume = 0
+    this.pauseAudioTarget.volume = 0
     this.lineClearAudioTarget.volume = 0
     this.muted = true
     e.currentTarget.style.display = 'none'
@@ -267,10 +276,34 @@ export default class extends Controller {
   unmute(e) {
     this.musicTarget.volume = 0.35
     this.loseAudioTarget.volume = 0.35
+    this.pauseAudioTarget.volume = 0.1
     this.lineClearAudioTarget.volume = 0.75
     this.muted = false
     e.currentTarget.style.display = 'none'
     this.muteBtnTarget.style.display = 'inline-block'
+  }
+
+  #pause() {
+    this.paused = true
+    this.stopInputBuffer()
+    this.stopFallTimer()
+    this.musicTarget.pause()
+    this.pauseAudioTarget.play()
+    this.pausedTarget.innerHTML = '<div id="paused"><h2>PAUSED</h2></div>'
+  }
+
+  async #unpause() {
+    if (!this.pausedCue) {
+      this.pausedCue = true
+      this.pauseAudioTarget.play()
+      await this.buffer(60)
+      this.musicTarget.play()
+      this.startInputBuffer()
+      this.startFallTimer()
+      this.pausedTarget.innerHTML = ''
+      this.paused = false
+      this.pausedCue = false
+    }
   }
 
   #drawPiece() {
