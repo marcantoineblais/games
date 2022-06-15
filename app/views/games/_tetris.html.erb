@@ -1,7 +1,7 @@
 <div class="tetris" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#removeInput" data-tetris-link-value="<%= game_score_index_path(game) %>">
   <h2 class="text-center" data-tetris-target="level">Level 1</h2>
   <div class="d-flex justify-content-center">
-    <div id="high-scores" class="high-scores scoreboard me-5">
+    <div id="high-scores" class="high-scores scoreboard me-5" data-tetris-target="highscores">
       <%= render 'games/high_scores.html.erb', scores: game.scores %>
     </div>
     <div>
@@ -17,13 +17,15 @@
           </div>
           <% y += 1 %>
         <% end %>
+      <%= render 'games/start_game.html.erb' %>
+      <div data-tetris-target="gameOver"></div>
+      <div data-tetris-target="paused"></div>
       </div>
-      <div class="volume-control d-flex flex-row-reverse justify-content-between align-items-center p-3">
+      <div class="volume-control d-flex justify-content-end p-3">
         <p>
           <i class="fa-solid fa-volume-high"  data-action="click->tetris#mute" data-tetris-target="muteBtn"></i>
           <i class="fa-solid fa-volume-xmark" data-action="click->tetris#unmute" data-tetris-target="unmuteBtn"></i>
         </p>
-        <button id="start" data-tetris-target="startBtn" data-action="click->tetris#start">START</button>
       </div>
     </div>
 
@@ -47,12 +49,6 @@
         <% end %>
       </div>
     </div>
-  </div>
-
-
-  <div id="game-over" data-tetris-target="gameOver">
-    <H2>GAME OVER</H2>
-    <button class="m-3" data-tetris-target="replayBtn" data-action="click->tetris#replay">PLAY AGAIN?</button>
   </div>
 
 

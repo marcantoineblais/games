@@ -1,0 +1,7 @@
+<div id="game-over">
+  <% if @game.scores.order(points: 'desc').first(10).include?(@score) %>
+    <h2 class="mb-5">NEW HIGHSCORE!</h2>
+  <% end %>
+  <H2>GAME OVER</H2>
+  <button class="m-3" data-tetris-target="replayBtn" data-action="click->tetris#replay">PLAY AGAIN?</button>
+</div>

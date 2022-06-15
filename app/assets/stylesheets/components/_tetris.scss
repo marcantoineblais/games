@@ -24,10 +24,40 @@ h1 {
     min-width: fit-content;
     height: fit-content;
     padding: 0 1em;
+    background-color: #000000aa;
   }
 
+  #start {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+
+    h2 {
+      margin-bottom: 3em;
+    }
+    h3 {
+      border-bottom: #eee solid 1px;
+    }
+
+    p {
+      font-size: 24px;
+    }
+
+  }
+
+  #paused,
   #game-over {
-    display: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -37,18 +67,17 @@ h1 {
     background-color: #00000088;
     color: white;
     font-size: 48px;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
   }
 
   .scoreboard {
     border:#888 1px solid;
     border-radius: 15px;
     width: 146px;
+    background-color: #000000aa;
   }
 
   .board {
+    position: relative;
     width: fit-content;
     height: fit-content;
     background-color: #000000aa;
@@ -84,6 +113,7 @@ h1 {
     padding: 12px;
     width: fit-content;
     height: fit-content;
+    background-color: #000000aa;
   }
 
   .next-grid {
@@ -173,7 +203,7 @@ h1 {
     background-color: #00000000;
   }
 
-  @media only screen and (max-height: 1080px) {
+  @media only screen and (max-height: 1200px) {
     .grid {
       height: 32px;
       width: 32px;
@@ -191,9 +221,15 @@ h1 {
       padding-top: 282px;
       margin-top: -282px;
     }
+
+    #start {
+      p {
+        font-size: 20px;
+      }
+    }
   }
 
-  @media only screen and (max-height: 900px) {
+  @media only screen and (max-height: 1080px) {
     .grid {
       height: 25px;
       width: 25px;
@@ -201,6 +237,20 @@ h1 {
 
     .volume-control {
       width: 300px;
+
+      p {
+        font-size: 16px;
+      }
+    }
+
+    #start {
+      h2 {
+        font-size: 24px;
+      }
+
+      h3 {
+        font-size: 20px;
+      }
 
       p {
         font-size: 16px;

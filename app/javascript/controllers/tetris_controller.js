@@ -6,9 +6,10 @@ export default class extends Controller {
     'grid',
     'nextGrid',
     'row',
-    'startBtn',
+    'start',
     'replayBtn',
     'gameOver',
+    'highscores',
     'score',
     'level',
     'music',
@@ -37,19 +38,17 @@ export default class extends Controller {
     this.lineClearAudioTarget.volume = 0.75
   }
 
-  start(e) {
-    e.currentTarget.style.display = "none"
+  start() {
+    this.startTarget.outerHTML = ""
     this.musicTarget.play()
     this.newPiece()
   }
 
-  replay(e) {
-    this.gameOverTarget.style.display = "none"
-
+  replay() {
     this.gridTargets.forEach((space) => {
-      space.className = 'grid'
+      space.className = 'grid empty'
     })
-
+    this.gameOverTarget.innerHTML = ""
     this.speed = 1000
     this.score = 0
     this.destroyedLines = 0
@@ -199,16 +198,31 @@ export default class extends Controller {
     if (e.key == ' ') {
       this.#rotate()
     }
+
+    if (e.key.toLowerCase() == 'm') {
+      if (this.muted) {
+        this.unmuteBtnTarget.click()
+      } else {
+        this.muteBtnTarget.click()
+      }
+    }
+
+    if (e.key.toLowerCase() == 'p') {
+      if (this.paused) {
+        this.unpause()
+      } else {
+        this.pause()
+      }
+    }
   }
 
-  move() {
+  async move() {
     if (this.inputs.includes('arrowleft') || this.inputs.includes('a')) {
       if(!this.leftCue) {
         this.leftCue = true
         this.#moveLeft()
-        this.buffer(4).then(() => {
-         this.leftCue = false
-        })
+        await this.buffer(4)
+        this.leftCue = false
       }
     }
 
@@ -216,9 +230,8 @@ export default class extends Controller {
       if(!this.rightCue) {
         this.rightCue = true
         this.#moveRight()
-        this.buffer(4).then(() => {
-         this.rightCue = false
-        })
+        await this.buffer(4)
+        this.rightCue = false
       }
     }
 
@@ -227,10 +240,9 @@ export default class extends Controller {
         this.downCue = true
         this.stopFallTimer()
         this.#moveDown()
-        this.buffer(1).then(() => {
-          this.startFallTimer()
-          this.downCue = false
-        })
+        await this.buffer(1)
+        this.startFallTimer()
+        this.downCue = false
       }
     }
   }
@@ -247,6 +259,7 @@ export default class extends Controller {
     this.musicTarget.volume = 0
     this.loseAudioTarget.volume = 0
     this.lineClearAudioTarget.volume = 0
+    this.muted = true
     e.currentTarget.style.display = 'none'
     this.unmuteBtnTarget.style.display = 'inline-block'
   }
@@ -255,6 +268,7 @@ export default class extends Controller {
     this.musicTarget.volume = 0.35
     this.loseAudioTarget.volume = 0.35
     this.lineClearAudioTarget.volume = 0.75
+    this.muted = false
     e.currentTarget.style.display = 'none'
     this.muteBtnTarget.style.display = 'inline-block'
   }
@@ -276,7 +290,7 @@ export default class extends Controller {
   }
 
 
-  #stopFalling() {
+  async #stopFalling() {
     if (!this.newPieceCue) {
       this.stopInputBuffer()
       this.stopFallTimer()
@@ -287,27 +301,29 @@ export default class extends Controller {
         document.getElementById(`${block.x},${block.y}`).className = `taken grid ${block.color}`
       })
 
-      this.#destroyFullLine().then((frames) => {
-        this.buffer(frames).then(() => {
-          if (this.game) {
-            this.newPiece()
-            this.disableDown = false
-            this.newPieceCue = false
-          }
-        })
-      })
+      const frames = await this.#destroyFullLine()
+      await this.buffer(frames)
+      if (this.game) {
+        this.newPiece()
+        this.disableDown = false
+        this.newPieceCue = false
+      }
     }
   }
 
   async #endOfGame() {
-    this.game = false
-    this.stopInputBuffer()
-    this.stopFallTimer()
-    this.musicTarget.pause()
-    this.loseAudioTarget.play()
-    const gameOverWindow = await this.#registerScore()
-    this.gameOverTarget.style.display = 'flex'
-    this.replayBtnTarget.style.display = "block"
+    if (!this.endGameCue) {
+      this.endGameCue = true
+      this.game = false
+      this.stopInputBuffer()
+      this.stopFallTimer()
+      this.musicTarget.pause()
+      this.loseAudioTarget.play()
+      const data = await this.#registerScore()
+      this.gameOverTarget.innerHTML = data.gameOver
+      this.highscoresTarget.innerHTML = data.highscores
+      this.endGameCue = false
+    }
   }
 
   #moveLeft() {
@@ -340,7 +356,7 @@ export default class extends Controller {
     }
   }
 
-  #moveDown() {
+  async #moveDown() {
     if (!this.disableDown) {
       const canMove = this.piece.blocks.every((block) => {
         return block.y < this.rows &&
@@ -358,19 +374,18 @@ export default class extends Controller {
       } else {
         this.disableDown = true
 
-        this.buffer().then(() => {
-          const canMove = this.piece.blocks.every((block) => {
-            return block.y < this.rows &&
-            !document.getElementById(`${block.x},${block.y + 1}`).classList.value.includes("taken") &&
-            this.piece.falling
-          })
-
-          if (!canMove) {
-            this.#stopFalling()
-          }
-
-          this.disableDown = false
+        await this.buffer()
+        const canMove = this.piece.blocks.every((block) => {
+          return block.y < this.rows &&
+          !document.getElementById(`${block.x},${block.y + 1}`).classList.value.includes("taken") &&
+          this.piece.falling
         })
+
+        if (!canMove) {
+          this.#stopFalling()
+        }
+
+        this.disableDown = false
       }
     }
   }
@@ -459,11 +474,11 @@ export default class extends Controller {
     }
   }
 
-  #destroyFullLine() {
+  async #destroyFullLine() {
     let fullLines = 0
     let frames = 15
 
-    this.rowTargets.forEach((row) => {
+    const promises = this.rowTargets.map((row) => {
       const spacesArray = Array.from(row.children)
       const fullLine = spacesArray.every((space) => {
         return space.classList.value.includes("taken")
@@ -473,14 +488,17 @@ export default class extends Controller {
         this.destroyedLines += 1
         fullLines += 1
         frames = 60
+        this.lineClearAudioTarget.currentTime = 0
         this.lineClearAudioTarget.play()
         const rowYPosition = parseInt(spacesArray[0].id.split(',')[1])
+
         spacesArray.forEach((space) => {
           space.classList.add("no-borders")
         })
+
         row.classList.add("explosion")
 
-        this.buffer(60).then(() => {
+        this.buffer(60).then(() =>{
           row.classList.remove("explosion")
           spacesArray.forEach((space) => {
             space.className = "grid empty"
@@ -497,10 +515,11 @@ export default class extends Controller {
               document.getElementById(`${x},${y + 1}`).className = block
             }
           })
-
         })
       }
     })
+
+    await Promise.all(promises)
     this.#score(fullLines)
     return this.#waitForIt(frames)
   }
@@ -535,11 +554,19 @@ export default class extends Controller {
 
   async #registerScore() {
     const csrfToken = document.querySelector("[name='csrf-token']").content
-    console.log(csrfToken)
     const url = this.linkValue
-    const options = {method: 'POST', headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRFToken': csrfToken }, body: JSON.stringify({'points': this.score})}
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-CSRF-Token': csrfToken,
+      },
+      body: JSON.stringify({'points': this.score})
+    }
+
     const res = await fetch(url, options)
-    const data = res.json
-    console.log(data)
+    const data = await res.json()
+    return data
   }
 }
