@@ -33,14 +33,14 @@
     <div id="score">
       <div class="scoreboard">
         <h3 class="text-end pe-3">Score</h3>
-        <h3 data-tetris-target="score" class="text-end pe-3">0</h3>
+        <h3 data-tetris-target="score" class="text-end pe-3 pb-3">0</h3>
       </div>
       <div class="next-piece mt-3 me-3">
         <% y = -1 %>
         <% 5.times do %>
           <div class="d-flex justify-content-center">
-            <% x = 4 %>
-            <% 5.times do %>
+            <% x = 2 %>
+            <% 9.times do %>
               <div id="next-<%= x %>,<%= y %>" class="next-grid empty" data-tetris-target="nextGrid"></div>
               <% x += 1 %>
             <% end %>
