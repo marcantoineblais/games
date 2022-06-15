@@ -29,7 +29,13 @@ body {
 
 .notice,
 .alert {
-  position: absolute;
+  position: absolute!important;
   bottom: 3em;
   right: 3em;
+}
+
+#game-list {
+  a {
+    font-size: 32px!important;
+  }
 }
