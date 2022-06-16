@@ -1,10 +1,12 @@
 <div class="tetris" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#removeInput" data-tetris-link-value="<%= game_scores_path(game) %>">
   <h2 class="text-center" data-tetris-target="level">Level 1</h2>
-  <div class="d-flex justify-content-center">
-    <div id="high-scores" class="high-scores scoreboard me-5" data-tetris-target="highscores">
-      <%= render 'games/high_scores.html.erb', scores: game.scores %>
+  <div class="row justify-content-center w-100">
+    <div class="col-3">
+      <div id="high-scores" class="high-scores scoreboard" data-tetris-target="highscores">
+        <%= render 'games/high_scores.html.erb', scores: game.scores %>
+      </div>
     </div>
-    <div>
+    <div class="col-6 d-flex flex-column align-items-center">
       <div class="board">
         <% y = 0 %>
         <% 22.times do %>
@@ -21,7 +23,7 @@
       <div data-tetris-target="gameOver"></div>
       <div data-tetris-target="paused"></div>
       </div>
-      <div class="volume-control d-flex justify-content-end p-3">
+      <div class="volume-control d-flex justify-content-end w-50 pt-1">
         <p>
           <i class="fa-solid fa-volume-high"  data-action="click->tetris#mute" data-tetris-target="muteBtn"></i>
           <i class="fa-solid fa-volume-xmark" data-action="click->tetris#unmute" data-tetris-target="unmuteBtn"></i>
@@ -30,17 +32,17 @@
     </div>
 
 
-    <div id="score">
+    <div id="score" class="col-3">
       <div class="scoreboard">
         <h3 class="text-end pe-3">Score</h3>
         <h3 data-tetris-target="score" class="text-end pe-3 pb-3">0</h3>
       </div>
-      <div class="next-piece mt-3 me-3">
+      <div class="next-piece mt-3">
         <% y = -1 %>
         <% 5.times do %>
           <div class="d-flex justify-content-center">
-            <% x = 2 %>
-            <% 9.times do %>
+            <% x = 4 %>
+            <% 5.times do %>
               <div id="next-<%= x %>,<%= y %>" class="next-grid empty" data-tetris-target="nextGrid"></div>
               <% x += 1 %>
             <% end %>
