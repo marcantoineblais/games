@@ -595,11 +595,16 @@ export default class extends Controller {
         'Accept': 'application/json',
         'X-CSRF-Token': csrfToken,
       },
-      body: JSON.stringify({'points': this.score})
+      body: JSON.stringify({'key': this.#hash(`${this.score}`), 'points': this.score})
     }
 
     const res = await fetch(url, options)
     const data = await res.json()
     return data
+  }
+
+  #hash(string) {
+    const { createHash } = require('crypto')
+    return createHash('sha256').update(string).digest('hex')
   }
 }

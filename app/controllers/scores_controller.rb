@@ -42,6 +42,8 @@ class ScoresController < ApplicationController
   private
 
   def score_params
-    params.require(:score).permit(:points)
+    if params[:key] == Digest::SHA256.hexdigest(params[:score][:points].to_s)
+      params.require(:score).permit(:points)
+    end
   end
 end
