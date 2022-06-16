@@ -1,14 +1,14 @@
 <h3 class="mt-1">Highscores</h3>
 
 <div class="d-flex flex-column mt-4">
-  <% if scores.count == 0 %>
-    <p>No highscores yet.</p>
-  <% else %>
-    <% scores.order(points: :desc).first(10).each do |score| %>
+  <% if scores.order(points: :desc).where('points > 0').count > 0 %>
+    <% scores.order(points: :desc).where('points > 0').first(10).each do |score| %>
       <div class="d-flex justify-content-between">
         <p><%= score.user.username %></p>
         <p><%= score.points %></p>
       </div>
     <% end %>
+  <% else %>
+    <p>No highscores yet.</p>
   <% end %>
 </div>
