@@ -1,5 +1,5 @@
 <div id="game-over">
-  <% if game.scores.order(points: 'desc').first(10).include?(score) %>
+  <% if game.scores.order(points: 'desc').first(10).include?(score) && score > 0 %>
     <h2 class="mb-5">NEW HIGHSCORE!</h2>
   <% else %>
     <H2>GAME OVER</H2>
