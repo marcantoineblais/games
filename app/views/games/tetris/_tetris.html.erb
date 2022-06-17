@@ -1,13 +1,13 @@
-<div class="tetris" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#removeInput" data-tetris-link-value="<%= game_scores_path(game) %>">
-  <h2 class="text-center" data-tetris-target="level">Level 1</h2>
+<div class="tetris" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#otherInput" data-tetris-link-value="<%= game_scores_path(game) %>">
   <div class="row justify-content-center w-100">
-    <div class="col-3">
+    <div class="d-none d-md-block col-3 col-lg-auto">
       <div id="high-scores" class="high-scores scoreboard" data-tetris-target="highscores">
         <%= render 'games/tetris/high_scores', formats: :html, scores: game.scores %>
       </div>
     </div>
 
-    <div class="col-6 d-flex flex-column align-items-center">
+    <div id="game" class="col-6 col-sm-auto d-flex flex-column align-items-center">
+      <h2 class="text-center" data-tetris-target="level">Level 1</h2>
       <div class="board">
         <% y = 0 %>
         <% 22.times do %>
@@ -33,10 +33,10 @@
     </div>
 
 
-    <div id="score" class="col-3">
+    <div id="score" class="col-3 col-lg-2">
       <div class="scoreboard">
-        <h3 class="text-end pe-3">Score</h3>
-        <h3 data-tetris-target="score" class="text-end pe-3 pb-3">0</h3>
+        <h3 class="text-end pt-1 px-3 m-0">Score</h3>
+        <p data-tetris-target="score" class="text-end pe-3 py-3 m-0">0</p>
       </div>
       <div class="next-piece mt-3">
         <% y = -1 %>

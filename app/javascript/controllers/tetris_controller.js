@@ -27,7 +27,7 @@ export default class extends Controller {
   }
 
   connect() {
-    const game = this.element
+    this.scoreTarget.scrollIntoView(true)
     this.cols = 11
     this.rows = 21
     this.speed = 800
@@ -221,9 +221,6 @@ export default class extends Controller {
         })
       }
     }
-    console.log(this.touchCue)
-    console.log(this.clientX)
-    console.log(this.clientY)
   }
 
   setTouchCoordinates(e) {
