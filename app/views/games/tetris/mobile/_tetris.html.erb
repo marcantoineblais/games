@@ -1,4 +1,4 @@
-<div class="tetris" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#removeInput" data-tetris-link-value="<%= game_scores_path(game) %>">
+<div class="tetris" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#otherInput" data-tetris-link-value="<%= game_scores_path(game) %>">
   <div class="row justify-content-center w-100">
 
     <div class="row justify-content-center">
@@ -27,7 +27,7 @@
     </div>
 
     <div class="col-12 d-flex flex-column align-items-center">
-      <div class="board">
+      <div class="board" data-action="touchmove->tetris#touchControl touchstart->tetris#setTouchCoordinates">
         <% y = 0 %>
         <% 22.times do %>
           <div class="d-flex justify-content-center" data-tetris-target="row">

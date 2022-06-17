@@ -190,13 +190,39 @@ export default class extends Controller {
     clearInterval(this.fallTimer)
   }
 
+  async touchControl(e) {
+    if (e.touches[0].clientX < this.clientX) {
+      this.inputs.push('arrowleft')
+      this.clientX = e.touches[0].clientX
+    }
+
+    if (e.touches[0].clientX > this.clientX) {
+      this.inputs.push('arrowright')
+      this.clientX = e.touches[0].clientX
+    }
+
+    if (e.touches[0].clientY > this.clientY) {
+      this.inputs.push('arrowdown')
+      this.clientY = e.touches[0].clientY
+    }
+
+    console.log(this.clientY);
+    await this.buffer(1)
+    this.inputs = []
+  }
+
+  setTouchCoordinates(e) {
+    this.clientX = e.touches[0].clientX
+    this.clientY = e.touches[0].clientY
+  }
+
   moveInput(e) {
     if (e && !this.inputs.includes(e.key.toLowerCase())) {
       this.inputs.push(e.key.toLowerCase())
     }
   }
 
-  removeInput(e) {
+  otherInput(e) {
     this.inputs = this.inputs.filter(key => key !== e.key.toLowerCase())
 
     if (e.key == ' ') {
