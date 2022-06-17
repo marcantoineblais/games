@@ -193,7 +193,7 @@ export default class extends Controller {
   touchControl(e) {
     e.preventDefault()
 
-    if (!this.touchCue) {
+    if (!this.touchCue && this.game) {
       const clientX = e.touches[0].clientX
       const clientY = e.touches[0].clientY
 
