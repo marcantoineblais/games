@@ -4,7 +4,6 @@ h1 {
 }
 
 .tetris {
-
   width: 100%;
   color: #eee;
   * {
@@ -89,6 +88,7 @@ h1 {
     border: solid #888 1px;
     border-radius: 15px;
     overflow: hidden;
+    touch-action: none;
   }
 
   .grid {
