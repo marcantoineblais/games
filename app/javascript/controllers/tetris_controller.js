@@ -191,19 +191,22 @@ export default class extends Controller {
   }
 
   async touchControl(e) {
-    if (e.touches[0].clientX < this.clientX) {
+    const clientX = e.touches[0].clientX
+    const clientY = e.touches[0].clientY
+
+    if (clientX + 1 < this.clientX) {
       this.inputs.push('arrowleft')
-      this.clientX = e.touches[0].clientX
+      this.clientX = clientX
     }
 
-    if (e.touches[0].clientX > this.clientX) {
+    if (clientX - 1 > this.clientX) {
       this.inputs.push('arrowright')
-      this.clientX = e.touches[0].clientX
+      this.clientX = clientX
     }
 
-    if (e.touches[0].clientY > this.clientY) {
+    if (clientY - 1 > this.clientY) {
       this.inputs.push('arrowdown')
-      this.clientY = e.touches[0].clientY
+      this.clientY = clientY
     }
 
     await this.buffer(1)
