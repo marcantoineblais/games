@@ -3,9 +3,10 @@
   <div class="row justify-content-center w-100">
     <div class="col-3">
       <div id="high-scores" class="high-scores scoreboard" data-tetris-target="highscores">
-        <%= render 'games/high_scores.html.erb', scores: game.scores %>
+        <%= render 'games/tetris/high_scores', formats: :html, scores: game.scores %>
       </div>
     </div>
+
     <div class="col-6 d-flex flex-column align-items-center">
       <div class="board">
         <% y = 0 %>
@@ -19,7 +20,7 @@
           </div>
           <% y += 1 %>
         <% end %>
-      <%= render 'games/start_game.html.erb' %>
+      <%= render 'games/tetris/start_game', formats: :html %>
       <div data-tetris-target="gameOver"></div>
       <div data-tetris-target="paused"></div>
       </div>

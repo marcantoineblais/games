@@ -14,13 +14,13 @@ class ScoresController < ApplicationController
         end
         @score.save
         game_over = render_to_string(
-          partial: 'games/game_over',
+          partial: "games/#{@game.name.downcase}/game_over",
           formats: :html,
           locals: { score: @score, game: @game }
         )
 
         high_scores = render_to_string(
-          partial: 'games/high_scores',
+          partial: "games/#{@game.name.downcase}/high_scores",
           formats: :html,
           locals: { scores: @game.scores }
         )

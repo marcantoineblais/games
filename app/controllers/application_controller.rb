@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  before_action :find_device_type
   before_action :store_user_location!, if: :storable_location?
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :authenticate_user!
@@ -10,6 +11,14 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def find_device_type
+    user_agent = request.user_agent
+    client = DeviceDetector.new(user_agent)
+    @device = client.device_type
+
+    # @device = 'smartphone'
+  end
 
   def store_user_location!
     store_location_for(:user, request.fullpath)

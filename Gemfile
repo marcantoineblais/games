@@ -63,3 +63,6 @@ gem 'devise'
 
 #sha256
 gem 'digest'
+
+# Detect client type
+gem 'device_detector'
