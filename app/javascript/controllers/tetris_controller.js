@@ -206,7 +206,6 @@ export default class extends Controller {
       this.clientY = e.touches[0].clientY
     }
 
-    console.log(this.clientY);
     await this.buffer(1)
     this.inputs = []
   }
@@ -214,6 +213,10 @@ export default class extends Controller {
   setTouchCoordinates(e) {
     this.clientX = e.touches[0].clientX
     this.clientY = e.touches[0].clientY
+  }
+
+  touchRotate() {
+    this.#rotate()
   }
 
   moveInput(e) {

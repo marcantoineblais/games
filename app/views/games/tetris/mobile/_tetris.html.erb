@@ -27,7 +27,7 @@
     </div>
 
     <div class="col-12 d-flex flex-column align-items-center">
-      <div class="board" data-action="touchmove->tetris#touchControl touchstart->tetris#setTouchCoordinates">
+      <div class="board" data-action="touchmove->tetris#touchControl touchstart->tetris#setTouchCoordinates click->tetris#touchRotate">
         <% y = 0 %>
         <% 22.times do %>
           <div class="d-flex justify-content-center" data-tetris-target="row">
