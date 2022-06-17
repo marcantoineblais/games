@@ -191,6 +191,8 @@ export default class extends Controller {
   }
 
   touchControl(e) {
+    e.preventDefault()
+
     if (!this.touchCue) {
       const clientX = e.touches[0].clientX
       const clientY = e.touches[0].clientY
