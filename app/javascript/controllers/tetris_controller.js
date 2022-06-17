@@ -190,27 +190,40 @@ export default class extends Controller {
     clearInterval(this.fallTimer)
   }
 
-  async touchControl(e) {
-    const clientX = e.touches[0].clientX
-    const clientY = e.touches[0].clientY
+  touchControl(e) {
+    if (!this.touchCue) {
+      const clientX = e.touches[0].clientX
+      const clientY = e.touches[0].clientY
 
-    if (clientX + 5 < this.clientX) {
-      this.inputs.push('arrowleft')
-      this.clientX = clientX
+      if (clientX + 5 < this.clientX) {
+        this.touchCue = true
+        this.#moveLeft()
+        this.buffer(4).then(() => {
+          this.clientX = clientX
+          this.clientY = clientY
+          this.touchCue = false
+        })
+      } else if (clientX - 5 > this.clientX) {
+        this.touchCue = true
+        this.#moveRight()
+        this.buffer(4).then(() => {
+          this.clientX = clientX
+          this.clientY = clientY
+          this.touchCue = false
+        })
+      } else if (clientY - 5 > this.clientY) {
+        this.touchCue = true
+        this.#moveDown()
+        this.buffer(1).then(() => {
+          this.clientX = clientX
+          this.clientY = clientY
+          this.touchCue = false
+        })
+      }
     }
-
-    if (clientX - 5 > this.clientX) {
-      this.inputs.push('arrowright')
-      this.clientX = clientX
-    }
-
-    if (clientY - 5 > this.clientY) {
-      this.inputs.push('arrowdown')
-      this.clientY = clientY
-    }
-
-    await this.buffer(1)
-    this.inputs = []
+    console.log(this.touchCue)
+    console.log(this.clientX)
+    console.log(this.clientY)
   }
 
   setTouchCoordinates(e) {
