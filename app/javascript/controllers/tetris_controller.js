@@ -194,17 +194,17 @@ export default class extends Controller {
     const clientX = e.touches[0].clientX
     const clientY = e.touches[0].clientY
 
-    if (clientX + 15 < this.clientX) {
+    if (clientX + 5 < this.clientX) {
       this.inputs.push('arrowleft')
       this.clientX = clientX
     }
 
-    if (clientX - 15 > this.clientX) {
+    if (clientX - 5 > this.clientX) {
       this.inputs.push('arrowright')
       this.clientX = clientX
     }
 
-    if (clientY - 15 > this.clientY) {
+    if (clientY - 5 > this.clientY) {
       this.inputs.push('arrowdown')
       this.clientY = clientY
     }
