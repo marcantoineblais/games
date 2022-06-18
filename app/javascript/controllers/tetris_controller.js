@@ -278,7 +278,7 @@ export default class extends Controller {
   }
 
   touchRotate() {
-    if (Date.now() - this.touchStart < 200 && !this.touchCue) {
+    if (Date.now() - this.touchStart < 120) {
       this.#rotate()
     }
   }
