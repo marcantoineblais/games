@@ -197,7 +197,7 @@ export default class extends Controller {
       const clientX = e.touches[0].clientX
       const clientY = e.touches[0].clientY
 
-      if (clientX + 5 < this.clientX) {
+      if (clientX + 10 < this.clientX) {
         this.touchCue = true
         this.#moveLeft()
         this.buffer(4).then(() => {
@@ -205,7 +205,7 @@ export default class extends Controller {
           this.clientY = clientY
           this.touchCue = false
         })
-      } else if (clientX - 5 > this.clientX) {
+      } else if (clientX - 10 > this.clientX) {
         this.touchCue = true
         this.#moveRight()
         this.buffer(4).then(() => {
@@ -213,7 +213,7 @@ export default class extends Controller {
           this.clientY = clientY
           this.touchCue = false
         })
-      } else if (clientY - 5 > this.clientY) {
+      } else if (clientY - 10 > this.clientY) {
         this.touchCue = true
         this.#moveDown()
         this.buffer(1).then(() => {
