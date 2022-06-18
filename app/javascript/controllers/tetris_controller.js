@@ -92,6 +92,10 @@ export default class extends Controller {
       h3.style.fontSize = '1.3rem'
     })
 
+    if (size < 12) {
+      size = 12
+    }
+
     if(nextSize > size) {
       nextSize = size
     }
@@ -106,8 +110,11 @@ export default class extends Controller {
       grid.style.height = `${nextSize}px`
     })
 
-    if (this.mainGridRowTarget.clientHeight > (windowHeight * 0.8)) {
-      this.drawGrids(e, size - 1, nextSize - 1)
+    if (this.mainGridRowTarget.clientHeight > (windowHeight * 0.8) || size == 12) {
+      if (nextSize > 8) {
+        nextSize -= 1
+      }
+      this.drawGrids(e, size - 1, nextSize)
     }
   }
 
