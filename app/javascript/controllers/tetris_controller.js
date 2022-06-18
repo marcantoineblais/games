@@ -272,12 +272,15 @@ export default class extends Controller {
   }
 
   setTouchCoordinates(e) {
+    this.touchStart = Date.now()
     this.clientX = e.touches[0].clientX
     this.clientY = e.touches[0].clientY
   }
 
   touchRotate() {
-    this.#rotate()
+    if (Date.now() - this.touchStart < 200 && !this.touchCue) {
+      this.#rotate()
+    }
   }
 
   moveInput(e) {
