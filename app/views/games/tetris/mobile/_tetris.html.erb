@@ -1,4 +1,4 @@
-<div class="tetris pt-3" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#otherInput" data-tetris-link-value="<%= game_scores_path(game) %>">
+<div class="tetris pt-3" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#otherInput resize@window->tetris#drawGrids" data-tetris-link-value="<%= game_scores_path(game) %>">
   <div class="row justify-content-center w-100">
 
     <div class="row justify-content-center">
@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="row mt-3 justify-content-end align-items-center">
-      <div class="next-piece col-auto col-sm-3 col-md-auto">
+      <div class="next-piece col-3" data-tetris-target="nextGridRow">
         <% y = -1 %>
         <% 5.times do %>
           <div class="d-flex justify-content-center">
@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <div class="col-12 d-flex flex-column align-items-center">
+    <div class="col-12 d-flex flex-column align-items-center" data-tetris-target="mainGridRow">
       <h2 class="text-center" data-tetris-target="level">Level 1</h2>
       <div class="board" data-action="touchmove->tetris#touchControl touchstart->tetris#setTouchCoordinates click->tetris#touchRotate">
         <% y = 0 %>

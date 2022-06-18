@@ -3,13 +3,10 @@ h1 {
   color: #eee
 }
 
-h3 {
-  font-size: 24px!important;
-}
-
 .tetris {
   width: 100%;
   color: #eee;
+
   * {
     box-sizing: border-box;
   }
@@ -49,11 +46,6 @@ h3 {
     h3 {
       border-bottom: #eee solid 1px;
     }
-
-    p {
-      font-size: 16px;
-    }
-
   }
 
   #paused,
@@ -70,7 +62,7 @@ h3 {
     z-index: 1;
     background-color: #00000088;
     color: white;
-    font-size: 48px;
+    font-size: 3rem;
   }
 
   .scoreboard {
@@ -97,22 +89,25 @@ h3 {
 
   .grid {
     position: relative;
-    width: 15px;
-    height: 15px;
     display: inline-block;
     padding: 0;
   }
 
-  .volume-control {
-    font-size: 16px;
+  #start {
+    i {
+      font-size: 1rem;
+    }
 
     i:hover {
       cursor: pointer;
       opacity: 0.9;
     }
 
+  }
+
+  .volume-control {
     i:last-child {
-      display: none;
+    display: none;
     }
   }
 
@@ -125,8 +120,6 @@ h3 {
   }
 
   .next-grid {
-    width: 8px;
-    height: 8px;
     display: inline-block;
     padding: 0;
   }
@@ -213,35 +206,6 @@ h3 {
 
 
   @media only screen and (min-height: 600px) and (min-width: 320px) {
-    .grid {
-      height: 18px;
-      width: 18px;
-    }
-
-    .next-grid {
-      width: 10px;
-      height: 10px;
-    }
-
-    .volume-control {
-      p {
-        font-size: 16px;
-      }
-    }
-
-    #start {
-      h2 {
-        font-size: 24px;
-      }
-
-      h3 {
-        font-size: 20px;
-      }
-
-      p {
-        font-size: 16px;
-      }
-    }
 
     .explosion {
       padding-top: 220px;
@@ -250,15 +214,6 @@ h3 {
   }
 
   @media only screen and (min-height: 720px) and (min-width: 380px) {
-    .grid {
-      height: 22px;
-      width: 22px;
-    }
-
-    .next-grid {
-      width: 15px;
-      height: 15px;
-    }
 
     .explosion {
       padding-top: 220px;
@@ -266,29 +221,7 @@ h3 {
     }
   }
 
-  @media only screen and (min-height: 720px) and (min-width: 540px) {
-    .next-grid {
-      width: 25px;
-      height: 25px;
-    }
-  }
-
   @media only screen and (min-height: 900px) and (min-width: 720px) {
-    .grid {
-      height: 28px;
-      width: 28px;
-    }
-
-    .next-grid {
-      width: 28px;
-      height: 28px;
-    }
-
-    .volume-control {
-      p {
-        font-size: 20px;
-      }
-    }
 
     .explosion {
       padding-top: 282px;
@@ -297,19 +230,6 @@ h3 {
   }
 
   @media only screen and (min-height: 1080px) and (min-width: 900px) {
-    .volume-control {
-      font-size: 24px;
-    }
-
-    .grid {
-      height: 36px;
-      width: 36px;
-    }
-
-    .next-grid {
-      width: 36px;
-      height: 36px;
-    }
 
     .explosion {
       padding-top: 350px;

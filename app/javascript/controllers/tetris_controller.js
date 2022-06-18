@@ -3,6 +3,8 @@ import { Controller } from 'stimulus';
 export default class extends Controller {
 
   static targets = [
+    'mainGridRow',
+    'nextGridRow',
     'grid',
     'nextGrid',
     'row',
@@ -39,6 +41,7 @@ export default class extends Controller {
     this.loseAudioTarget.volume = 0.35
     this.pauseAudioTarget.volume = 0.1
     this.lineClearAudioTarget.volume = 0.75
+    this.drawGrids()
   }
 
   start() {
@@ -63,6 +66,49 @@ export default class extends Controller {
     this.musicTarget.currentTime = 0
     this.musicTarget.play()
     this.newPiece()
+  }
+
+  drawGrids(e, size = this.mainGridRowTarget.clientWidth / 12, nextSize = this.nextGridRowTarget.clientWidth / 5) {
+    const windowHeight = window.innerHeight
+    const windowWidth = window.innerWidth
+
+    let windowSize
+    if (windowHeight > windowWidth) {
+      windowSize = windowWidth / 50
+    } else {
+      windowSize = windowHeight / 50
+    }
+    if (windowSize < 14) {
+      windowSize = 14
+    }
+
+    document.querySelector('html').style.fontSize = `${windowSize}px`
+
+    document.querySelectorAll('h2').forEach((h2) => {
+      h2.style.fontSize = '1.5rem'
+    })
+
+    document.querySelectorAll('h3').forEach((h3) => {
+      h3.style.fontSize = '1.3rem'
+    })
+
+    if(nextSize > size) {
+      nextSize = size
+    }
+
+    this.gridTargets.forEach((grid) => {
+      grid.style.width = `${size}px`
+      grid.style.height = `${size}px`
+    })
+
+    this.nextGridTargets.forEach((grid) => {
+      grid.style.width = `${nextSize}px`
+      grid.style.height = `${nextSize}px`
+    })
+
+    if (this.mainGridRowTarget.clientHeight > (windowHeight * 0.8)) {
+      this.drawGrids(e, size - 1, nextSize - 1)
+    }
   }
 
   newPiece() {
