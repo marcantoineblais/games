@@ -21,7 +21,9 @@ export default class extends Controller {
     'pauseAudio',
     'lineClearAudio',
     'muteBtn',
-    'unmuteBtn'
+    'unmuteBtn',
+    'pauseBtn',
+    'unpauseBtn'
   ]
 
   static values = {
@@ -78,8 +80,12 @@ export default class extends Controller {
     } else {
       windowSize = windowHeight / 50
     }
-    if (windowSize < 14) {
-      windowSize = 14
+    if (windowSize < 12) {
+      windowSize = 12
+    }
+
+    if (windowSize > 18) {
+      windowSize = 18
     }
 
     document.querySelector('html').style.fontSize = `${windowSize}px`
@@ -92,8 +98,8 @@ export default class extends Controller {
       h3.style.fontSize = '1.3rem'
     })
 
-    if (size < 12) {
-      size = 12
+    if (size < 10) {
+      size = 10
     }
 
     if(nextSize > size) {
@@ -110,7 +116,7 @@ export default class extends Controller {
       grid.style.height = `${nextSize}px`
     })
 
-    if (this.mainGridRowTarget.clientHeight > (windowHeight * 0.8) || size == 12) {
+    if (this.mainGridRowTarget.clientHeight > (windowHeight * 0.75) || size == 12) {
       if (nextSize > 8) {
         nextSize -= 1
       }
@@ -285,7 +291,7 @@ export default class extends Controller {
   }
 
   touchRotate() {
-    if (Date.now() - this.touchStart < 120) {
+    if (Date.now() - this.touchStart < 120 && this.game) {
       this.#rotate()
     }
   }
@@ -311,12 +317,8 @@ export default class extends Controller {
       }
     }
 
-    if (e.key.toLowerCase() == 'p' && this.game) {
-      if (this.paused) {
-        this.#unpause()
-      } else {
-        this.#pause()
-      }
+    if (e.key.toLowerCase() == 'p') {
+      this.pauseGame()
     }
 
     if (e.key.toLowerCase() == 'enter' && !this.game) {
@@ -363,6 +365,19 @@ export default class extends Controller {
     return new Promise((resolve) => resolve(param))
   }
 
+  async showHighscores() {
+    const highscoresModal = document.getElementById('highscores-modal')
+    highscoresModal.style.display = "flex"
+    await this.buffer(1)
+    highscoresModal.style.transform = "translateY(100%)";
+    highscoresModal.addEventListener('click', (e) => {
+      highscoresModal.style.transform = ""
+      this.buffer(60).then(() => {
+        highscoresModal.style.display = "none"
+      })
+    })
+  }
+
   mute(e) {
     this.musicTarget.volume = 0
     this.loseAudioTarget.volume = 0
@@ -383,13 +398,25 @@ export default class extends Controller {
     this.muteBtnTarget.style.display = 'inline-block'
   }
 
+  pauseGame() {
+    if (this.paused) {
+      this.#unpause()
+    } else {
+      this.#pause()
+    }
+  }
+
   #pause() {
-    this.paused = true
-    this.stopInputBuffer()
-    this.stopFallTimer()
-    this.musicTarget.pause()
-    this.pauseAudioTarget.play()
-    this.pausedTarget.innerHTML = '<div id="paused"><h2>PAUSED</h2></div>'
+    if (this.game) {
+      this.paused = true
+      this.stopInputBuffer()
+      this.stopFallTimer()
+      this.musicTarget.pause()
+      this.pauseAudioTarget.play()
+      this.pauseBtnTarget.style.display = "none"
+      this.unpauseBtnTarget.style.display = "inline-block"
+      this.pausedTarget.innerHTML = '<div id="paused"><h2>PAUSED</h2></div>'
+    }
   }
 
   async #unpause() {
@@ -401,6 +428,8 @@ export default class extends Controller {
       this.startInputBuffer()
       this.startFallTimer()
       this.pausedTarget.innerHTML = ''
+      this.unpauseBtnTarget.style.display = "none"
+      this.pauseBtnTarget.style.display = "inline-block"
       this.paused = false
       this.pausedCue = false
     }

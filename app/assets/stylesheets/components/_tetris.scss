@@ -15,6 +15,7 @@ h1 {
   flex-direction: column;
   align-items: center;
   overflow: visible;
+  max-height: 95vh;
 
   #high-scores {
     height: fit-content;
@@ -24,6 +25,34 @@ h1 {
     h3 {
       padding: 1em 0;
       text-align: left;
+    }
+  }
+
+  #highscores-modal {
+    display: none;
+    position : absolute;
+    top: -100%;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    background-color: #000000aa;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition-duration: 1000ms;
+
+    .content {
+      padding: 1em 3em;
+      width: 60%;
+      border: 1px #eee solid;
+      border-radius: 15px;
+      background-color: #000000;
+    }
+
+    .close {
+      position: absolute;
+      top: 5px;
+      right: 5px;
     }
   }
 

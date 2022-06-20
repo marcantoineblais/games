@@ -8,7 +8,7 @@
 
     <div id="game" class="col-6 col-md-4 d-flex flex-column align-items-center" data-tetris-target="mainGridRow">
       <h2 class="text-center" data-tetris-target="level">Level 1</h2>
-      <div class="board">
+      <div class="board" data-action="touchmove->tetris#touchControl touchstart->tetris#setTouchCoordinates touchend->tetris#touchRotate">
         <% y = 0 %>
         <% 22.times do %>
           <div class="d-flex justify-content-center" data-tetris-target="row">
@@ -25,6 +25,10 @@
       <div data-tetris-target="paused"></div>
       </div>
       <div class="volume-control d-flex justify-content-end w-50 pt-1">
+        <p class="pe-3">
+          <i class="fa-solid fa-pause" data-action="click->tetris#pauseGame" data-tetris-target="pauseBtn"></i>
+          <i class="fa-solid fa-play" data-action="click->tetris#pauseGame" data-tetris-target="unpauseBtn"></i>
+        </p>
         <p>
           <i class="fa-solid fa-volume-high"  data-action="click->tetris#mute" data-tetris-target="muteBtn"></i>
           <i class="fa-solid fa-volume-xmark" data-action="click->tetris#unmute" data-tetris-target="unmuteBtn"></i>
@@ -33,7 +37,7 @@
     </div>
 
 
-    <div id="score" class="col-4 col-lg-3 d-flex flex-column align-items-end">
+    <div id="score" class="col-4 col-lg-3 col-xl-2 d-flex flex-column align-items-end">
       <div class="scoreboard w-100">
         <h3 class="text-end pt-1 px-3 m-0">Score</h3>
         <p data-tetris-target="score" class="text-end pe-3 py-3 m-0">0</p>
@@ -55,8 +59,8 @@
   </div>
 
 
-  <audio data-tetris-target="music" src="<%= audio_path 'tetris.weba'%>" type="audio/weba" loop></audio>
-  <audio data-tetris-target="loseAudio" src="<%= audio_path 'lose.m4a'%>" type="audio/m4a"></audio>
-  <audio data-tetris-target="pauseAudio" src="<%= audio_path 'pause.weba'%>" type="audio/weba"></audio>
-  <audio data-tetris-target="lineClearAudio" src="<%= audio_path 'lineclear.weba'%>" type="audio/weba"></audio>
+  <%= audio_tag 'tetris.weba', 'tetris.m4a', data: {tetris_target: :music}, loop: true %>
+  <%= audio_tag 'lose.m4a', data: {tetris_target: :loseAudio}%>
+  <%= audio_tag 'pause.weba', 'pause.m4a', data: {tetris_target: :pauseAudio} %>
+  <%= audio_tag 'lineclear.weba', 'lineclear.m4a', data: {tetris_target: :lineClearAudio}%>
 </div>

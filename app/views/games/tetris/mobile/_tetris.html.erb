@@ -1,4 +1,11 @@
 <div class="tetris pt-3" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#otherInput resize@window->tetris#drawGrids" data-tetris-link-value="<%= game_scores_path(game) %>">
+  <!-- Modal -->
+  <div id="highscores-modal">
+    <button class="close"><span>&times;</span></button>
+    <div class="content" data-tetris-target="highscores">
+      <%= render 'games/tetris/high_scores', formats: :html, scores: game.scores %>
+    </div>
+  </div>
   <div class="row justify-content-center w-100">
 
     <div class="row justify-content-center">
@@ -9,7 +16,12 @@
         </div>
       </div>
     </div>
-    <div class="row mt-3 justify-content-end align-items-center">
+    <div class="row mt-3 justify-content-between">
+      <div class="col-8 col-md-6">
+        <div id="high-scores" class="high-scores scoreboard">
+          <h3 class="text-center py-1 m-0" data-action="click->tetris#showHighscores">Show highscores</h3>
+        </div>
+      </div>
       <div class="next-piece col-3" data-tetris-target="nextGridRow">
         <% y = -1 %>
         <% 5.times do %>
@@ -25,7 +37,7 @@
       </div>
     </div>
 
-    <div class="col-12 d-flex flex-column align-items-center" data-tetris-target="mainGridRow">
+    <div class="col-12 d-flex flex-column align-items-center pt-3" data-tetris-target="mainGridRow">
       <h2 class="text-center" data-tetris-target="level">Level 1</h2>
       <div class="board" data-action="touchmove->tetris#touchControl touchstart->tetris#setTouchCoordinates touchend->tetris#touchRotate">
         <% y = 0 %>
@@ -40,27 +52,27 @@
           <% y += 1 %>
         <% end %>
 
-      <%= render 'games/tetris/mobile/start_game', formats: :html %>
-      <div data-tetris-target="gameOver"></div>
-      <div data-tetris-target="paused"></div>
+        <%= render 'games/tetris/mobile/start_game', formats: :html %>
+        <div data-tetris-target="gameOver"></div>
+        <div data-tetris-target="paused"></div>
       </div>
-      <div class="volume-control d-flex justify-content-center pt-3 ms-5 ps-5">
+
+      <div class="volume-control d-flex justify-content-around w-100 pt-3">
+        <p>
+          <i class="fa-solid fa-pause" data-action="click->tetris#pauseGame" data-tetris-target="pauseBtn"></i>
+          <i class="fa-solid fa-play" data-action="click->tetris#pauseGame" data-tetris-target="unpauseBtn"></i>
+        </p>
+
         <p>
           <i class="fa-solid fa-volume-high"  data-action="click->tetris#mute" data-tetris-target="muteBtn"></i>
           <i class="fa-solid fa-volume-xmark" data-action="click->tetris#unmute" data-tetris-target="unmuteBtn"></i>
         </p>
       </div>
     </div>
-
-    <div class="col-12 col-sm-8 col-md-6">
-      <div id="high-scores" class="high-scores scoreboard" data-tetris-target="highscores">
-        <%= render 'games/tetris/high_scores', formats: :html, scores: game.scores %>
-      </div>
-    </div>
   </div>
 
-  <audio data-tetris-target="music" src="<%= audio_path 'tetris.weba'%>" type="audio/weba" loop></audio>
-  <audio data-tetris-target="loseAudio" src="<%= audio_path 'lose.m4a'%>" type="audio/m4a"></audio>
-  <audio data-tetris-target="pauseAudio" src="<%= audio_path 'pause.weba'%>" type="audio/weba"></audio>
-  <audio data-tetris-target="lineClearAudio" src="<%= audio_path 'lineclear.weba'%>" type="audio/weba"></audio>
+  <%= audio_tag 'tetris.weba', 'tetris.m4a', data: {tetris_target: :music}, loop: true %>
+  <%= audio_tag 'lose.m4a', data: {tetris_target: :loseAudio}%>
+  <%= audio_tag 'pause.weba', 'pause.m4a', data: {tetris_target: :pauseAudio} %>
+  <%= audio_tag 'lineclear.weba', 'lineclear.m4a', data: {tetris_target: :lineClearAudio}%>
 </div>
