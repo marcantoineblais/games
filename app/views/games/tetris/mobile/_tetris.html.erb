@@ -23,11 +23,11 @@
         </div>
       </div>
       <div class="next-piece col-3" data-tetris-target="nextGridRow">
-        <% y = -1 %>
-        <% 5.times do %>
+        <% y = 0 %>
+        <% 4.times do %>
           <div class="d-flex justify-content-center">
-            <% x = 4 %>
-            <% 5.times do %>
+            <% x = 5 %>
+            <% 3.times do %>
               <div id="next-<%= x %>,<%= y %>" class="next-grid empty" data-tetris-target="nextGrid"></div>
               <% x += 1 %>
             <% end %>

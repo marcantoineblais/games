@@ -252,46 +252,50 @@ export default class extends Controller {
   touchControl(e) {
     e.preventDefault()
 
-    if (!this.touchCue && this.game) {
-      const clientX = e.touches[0].clientX
-      const clientY = e.touches[0].clientY
+    if (!this.paused) {
+      if (!this.touchCue && this.game) {
+        const clientX = e.touches[0].clientX
+        const clientY = e.touches[0].clientY
 
-      if (clientX + 10 < this.clientX) {
-        this.touchCue = true
-        this.#moveLeft()
-        this.buffer(4).then(() => {
-          this.clientX = clientX
-          this.clientY = clientY
-          this.touchCue = false
-        })
-      } else if (clientX - 10 > this.clientX) {
-        this.touchCue = true
-        this.#moveRight()
-        this.buffer(4).then(() => {
-          this.clientX = clientX
-          this.clientY = clientY
-          this.touchCue = false
-        })
-      } else if (clientY - 10 > this.clientY) {
-        this.touchCue = true
-        this.#moveDown()
-        this.buffer(1).then(() => {
-          this.clientX = clientX
-          this.clientY = clientY
-          this.touchCue = false
-        })
+        if (clientX + 10 < this.clientX) {
+          this.touchCue = true
+          this.#moveLeft()
+          this.buffer(4).then(() => {
+            this.clientX = clientX
+            this.clientY = clientY
+            this.touchCue = false
+          })
+        } else if (clientX - 10 > this.clientX) {
+          this.touchCue = true
+          this.#moveRight()
+          this.buffer(4).then(() => {
+            this.clientX = clientX
+            this.clientY = clientY
+            this.touchCue = false
+          })
+        } else if (clientY - 10 > this.clientY) {
+          this.touchCue = true
+          this.#moveDown()
+          this.buffer(1).then(() => {
+            this.clientX = clientX
+            this.clientY = clientY
+            this.touchCue = false
+          })
+        }
       }
     }
   }
 
   setTouchCoordinates(e) {
-    this.touchStart = Date.now()
-    this.clientX = e.touches[0].clientX
-    this.clientY = e.touches[0].clientY
+    if (!this.paused) {
+      this.touchStart = Date.now()
+      this.clientX = e.touches[0].clientX
+      this.clientY = e.touches[0].clientY
+    }
   }
 
   touchRotate() {
-    if (Date.now() - this.touchStart < 120 && this.game) {
+    if (Date.now() - this.touchStart < 120 && this.game && !this.paused) {
       this.#rotate()
     }
   }
