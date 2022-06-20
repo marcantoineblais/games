@@ -31,7 +31,6 @@ export default class extends Controller {
   }
 
   connect() {
-    this.scoreTarget.scrollIntoView(true)
     this.cols = 11
     this.rows = 21
     this.speed = 800
