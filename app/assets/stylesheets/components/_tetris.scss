@@ -31,10 +31,10 @@ h1 {
   #highscores-modal {
     display: none;
     position : absolute;
-    top: -100vh;
+    top: 0;
     left: 0;
     right: 0;
-    bottom: 100vh;
+    bottom: 0;
     background-color: #000000aa;
     justify-content: center;
     align-items: center;

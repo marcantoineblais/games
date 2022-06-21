@@ -370,11 +370,12 @@ export default class extends Controller {
 
   async showHighscores() {
     const highscoresModal = document.getElementById('highscores-modal')
+    highscoresModal.style.transform = "translateY(-100%)"
     highscoresModal.style.display = "flex"
     await this.buffer(1)
-    highscoresModal.style.transform = "translateY(100%)";
+    highscoresModal.style.transform = "";
     highscoresModal.addEventListener('click', (e) => {
-      highscoresModal.style.transform = ""
+      highscoresModal.style.transform = "translateY(-100%)"
       this.buffer(60).then(() => {
         highscoresModal.style.display = "none"
       })
