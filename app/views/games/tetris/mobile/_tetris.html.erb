@@ -1,12 +1,12 @@
-<!-- Modal -->
-<div id="highscores-modal">
-  <button class="close"><span>&times;</span></button>
-  <div class="content" data-tetris-target="highscores">
-    <%= render 'games/tetris/high_scores', formats: :html, scores: game.scores %>
-  </div>
-</div>
 
 <div class="tetris pt-3" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#otherInput resize@window->tetris#drawGrids" data-tetris-link-value="<%= game_scores_path(game) %>">
+  <!-- Modal -->
+  <div id="highscores-modal">
+    <button class="close"><span>&times;</span></button>
+    <div class="content" data-tetris-target="highscores">
+      <%= render 'games/tetris/high_scores', formats: :html, scores: game.scores %>
+    </div>
+  </div>
 
   <div class="row justify-content-center w-100">
     <div class="row justify-content-center">
@@ -23,11 +23,11 @@
           <h3 class="text-center py-1 m-0" data-action="click->tetris#showHighscores">Show highscores</h3>
         </div>
       </div>
-      <div class="next-piece col-3" data-tetris-target="nextGridRow">
+      <div class="next-piece col-3 py-3" data-tetris-target="nextGridRow">
         <% y = 0 %>
         <% 4.times do %>
           <div class="d-flex justify-content-center">
-            <% x = 5 %>
+            <% x = 0 %>
             <% 3.times do %>
               <div id="next-<%= x %>,<%= y %>" class="next-grid empty" data-tetris-target="nextGrid"></div>
               <% x += 1 %>

@@ -126,68 +126,68 @@ export default class extends Controller {
   newPiece() {
 
     const straigtPiece = [
-      {color: 'pink', radiusX: -1, radiusY: -1, x: 6, y: 3},
-      {color: 'pink', radiusX: 0, radiusY: 0, x: 6, y: 2},
-      {color: 'pink', radiusX: 1, radiusY: 1, x: 6, y: 1},
-      {color: 'pink', radiusX: 2, radiusY: 2, x: 6, y: 0}
+      {color: 'pink', radiusX: -1, radiusY: -1, x: 6, y: 3, nextX: 1, nextY: 3},
+      {color: 'pink', radiusX: 0, radiusY: 0, x: 6, y: 2, nextX: 1, nextY: 2},
+      {color: 'pink', radiusX: 1, radiusY: 1, x: 6, y: 1, nextX: 1, nextY: 1},
+      {color: 'pink', radiusX: 2, radiusY: 2, x: 6, y: 0, nextX: 1, nextY: 0}
     ]
 
     const lPiece = [
-      {color: 'orange', radiusX: 1, radiusY: -1, x: 5, y: 2},
-      {color: 'orange', radiusX: 0, radiusY: 0, x: 6, y: 2},
-      {color: 'orange', radiusX: 1, radiusY: 1, x: 6, y: 1},
-      {color: 'orange', radiusX: 2, radiusY: 2, x: 6, y: 0}
+      {color: 'orange', radiusX: 1, radiusY: -1, x: 5, y: 2, nextX: 0, nextY: 2},
+      {color: 'orange', radiusX: 0, radiusY: 0, x: 6, y: 2, nextX: 1, nextY: 2},
+      {color: 'orange', radiusX: 1, radiusY: 1, x: 6, y: 1, nextX: 1, nextY: 1},
+      {color: 'orange', radiusX: 2, radiusY: 2, x: 6, y: 0, nextX: 1, nextY: 0}
     ]
 
     const reversedLPiece = [
-      {color: 'purple', radiusX: -1, radiusY: 1, x: 7, y: 2},
-      {color: 'purple', radiusX: 0, radiusY: 0, x: 6, y: 2},
-      {color: 'purple', radiusX: 1, radiusY: 1, x: 6, y: 1},
-      {color: 'purple', radiusX: 2, radiusY: 2, x: 6, y: 0}
+      {color: 'purple', radiusX: -1, radiusY: 1, x: 7, y: 2, nextX: 2, nextY: 2},
+      {color: 'purple', radiusX: 0, radiusY: 0, x: 6, y: 2, nextX: 1, nextY: 2},
+      {color: 'purple', radiusX: 1, radiusY: 1, x: 6, y: 1, nextX: 1, nextY: 1},
+      {color: 'purple', radiusX: 2, radiusY: 2, x: 6, y: 0, nextX: 1, nextY: 0}
     ]
 
     const zPiece = [
-      {color: 'blue', radiusX: 1, radiusY: -1, x: 5, y: 1},
-      {color: 'blue', radiusX: 0, radiusY: 0, x: 6, y: 1},
-      {color: 'blue', radiusX: 1, radiusY: 1, x: 6, y: 0},
-      {color: 'blue', radiusX: 0, radiusY: 2, x: 7, y: 0}
+      {color: 'blue', radiusX: 1, radiusY: -1, x: 5, y: 1, nextX: 0, nextY: 2},
+      {color: 'blue', radiusX: 0, radiusY: 0, x: 6, y: 1, nextX: 1, nextY: 2},
+      {color: 'blue', radiusX: 1, radiusY: 1, x: 6, y: 0, nextX: 1, nextY: 1},
+      {color: 'blue', radiusX: 0, radiusY: 2, x: 7, y: 0, nextX: 2, nextY: 1}
     ]
 
     const reversedZPiece = [
-      {color: 'red', radiusX: -1, radiusY: 1, x: 7, y: 1},
-      {color: 'red', radiusX: 0, radiusY: 0, x: 6, y: 1},
-      {color: 'red', radiusX: 1, radiusY: 1, x: 6, y: 0},
-      {color: 'red', radiusX: 2, radiusY: 0, x: 5, y: 0}
+      {color: 'red', radiusX: -1, radiusY: 1, x: 7, y: 1, nextX: 2, nextY: 2},
+      {color: 'red', radiusX: 0, radiusY: 0, x: 6, y: 1, nextX: 1, nextY: 2},
+      {color: 'red', radiusX: 1, radiusY: 1, x: 6, y: 0, nextX: 1, nextY: 1},
+      {color: 'red', radiusX: 2, radiusY: 0, x: 5, y: 0, nextX: 0, nextY: 1}
     ]
 
     const tPiece = [
-      {color: 'green', radiusX: -1, radiusY: -1, x: 6, y: 2},
-      {color: 'green', radiusX: -1, radiusY: 1, x: 7, y: 1},
-      {color: 'green', radiusX: 0, radiusY: 0, x: 6, y: 1},
-      {color: 'green', radiusX: 1, radiusY: 1, x: 6, y: 0},
+      {color: 'green', radiusX: -1, radiusY: -1, x: 6, y: 2, nextX: 1, nextY: 2},
+      {color: 'green', radiusX: -1, radiusY: 1, x: 7, y: 1, nextX: 2, nextY: 1},
+      {color: 'green', radiusX: 0, radiusY: 0, x: 6, y: 1, nextX: 1, nextY: 1},
+      {color: 'green', radiusX: 1, radiusY: 1, x: 6, y: 0, nextX: 1, nextY: 0},
     ]
 
     const squarePiece = [
-      {color: 'yellow', radiusX: 0, radiusY: 0, x: 7, y: 1},
-      {color: 'yellow', radiusX: 0, radiusY: 0, x: 6, y: 1},
-      {color: 'yellow', radiusX: 0, radiusY: 0, x: 7, y: 0},
-      {color: 'yellow', radiusX: 0, radiusY: 0, x: 6, y: 0},
+      {color: 'yellow', radiusX: 0, radiusY: 0, x: 7, y: 1, nextX: 2, nextY: 2},
+      {color: 'yellow', radiusX: 0, radiusY: 0, x: 6, y: 1, nextX: 1, nextY: 2},
+      {color: 'yellow', radiusX: 0, radiusY: 0, x: 7, y: 0, nextX: 2, nextY: 1},
+      {color: 'yellow', radiusX: 0, radiusY: 0, x: 6, y: 0, nextX: 1, nextY: 1},
     ]
 
     const singlePiece = [
-      {color: 'cyan', radiusX: 0, radiusY: 0, x: 6, y: 1}
+      {color: 'cyan', radiusX: 0, radiusY: 0, x: 6, y: 1, nextX: 1, nextY: 1}
     ]
 
     const angledPiece = [
-      {color: 'magenta', radiusX: -1, radiusY: 1, x: 7, y: 1},
-      {color: 'magenta', radiusX: 0, radiusY: 0, x: 6, y: 1},
-      {color: 'magenta', radiusX: 1, radiusY: 1, x: 6, y: 0}
+      {color: 'magenta', radiusX: -1, radiusY: 1, x: 7, y: 1, nextX: 2, nextY: 2},
+      {color: 'magenta', radiusX: 0, radiusY: 0, x: 6, y: 1, nextX: 1, nextY: 2},
+      {color: 'magenta', radiusX: 1, radiusY: 1, x: 6, y: 0, nextX: 1, nextY: 1}
     ]
 
     const reversedAngledPiece = [
-      {color: 'peach', radiusX: 1, radiusY: -1, x: 5, y: 1},
-      {color: 'peach', radiusX: 0, radiusY: 0, x: 6, y: 1},
-      {color: 'peach', radiusX: 1, radiusY: 1, x: 6, y: 0}
+      {color: 'peach', radiusX: 1, radiusY: -1, x: 5, y: 1, nextX: 0, nextY: 2},
+      {color: 'peach', radiusX: 0, radiusY: 0, x: 6, y: 1, nextX: 1, nextY: 2},
+      {color: 'peach', radiusX: 1, radiusY: 1, x: 6, y: 0, nextX: 1, nextY: 1}
     ]
 
 
@@ -451,7 +451,7 @@ export default class extends Controller {
     })
 
     this.nextPiece.blocks.forEach((block) => {
-      document.getElementById(`next-${block.x},${block.y}`).classList.add(`${block.color}`)
+      document.getElementById(`next-${block.nextX},${block.nextY}`).classList.add(`${block.color}`)
     })
   }
 
