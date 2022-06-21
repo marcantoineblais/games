@@ -1,13 +1,14 @@
-<div class="tetris pt-3" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#otherInput resize@window->tetris#drawGrids" data-tetris-link-value="<%= game_scores_path(game) %>">
-  <!-- Modal -->
-  <div id="highscores-modal">
-    <button class="close"><span>&times;</span></button>
-    <div class="content" data-tetris-target="highscores">
-      <%= render 'games/tetris/high_scores', formats: :html, scores: game.scores %>
-    </div>
+<!-- Modal -->
+<div id="highscores-modal">
+  <button class="close"><span>&times;</span></button>
+  <div class="content" data-tetris-target="highscores">
+    <%= render 'games/tetris/high_scores', formats: :html, scores: game.scores %>
   </div>
-  <div class="row justify-content-center w-100">
+</div>
 
+<div class="tetris pt-3" data-controller="tetris" data-action="keydown@window->tetris#moveInput keyup@window->tetris#otherInput resize@window->tetris#drawGrids" data-tetris-link-value="<%= game_scores_path(game) %>">
+
+  <div class="row justify-content-center w-100">
     <div class="row justify-content-center">
       <div id="score" class="col-12 col-sm-8 col-md-6">
         <div class="scoreboard d-flex justify-content-between">
